@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Alice</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link href="./app.css" rel='stylesheet' type='text/css'>
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="./app.js"></script>
+</head>
+<body>
+<section class="content-header">
+  <h1>
+    Alice
+    <small>Smart Contracts Demo</small>
+  </h1>
+</section>
+
+<div class="row">
+  <div class="col-lg-3 col-xs-6">
+    <!-- small box -->
+    <div class="small-box bg-aqua">
+      <div class="inner" style="height: 128px">
+        <h3>Donor 1</h3>
+        <p><i class="fa fa-database"></i> <span id="balance_donor_1"></span> LHC</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-person"></i>
+      </div>
+      <a href="#" class="small-box-footer" onclick="donate(donor1Account, 20)">Donate (20) <i class="fa fa-arrow-circle-right"></i></a>
+      <a href="#" class="small-box-footer" onclick="reuseUnspent(donor1Account)">Reuse Unspent <i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+
+    <div class="small-box bg-aqua">
+      <div class="inner" style="height: 128px">
+        <h3>Donor 2</h3>
+        <p><i class="fa fa-database"></i> <span id="balance_donor_2"></span> LHC</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-person"></i>
+      </div>
+      <a href="#" class="small-box-footer" onclick="donate(donor2Account, 20)">Donate (20) <i class="fa fa-arrow-circle-right"></i></a>
+      <a href="#" class="small-box-footer" onclick="reuseUnspent(donor2Account)">Reuse Unspent <i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+
+  </div>
+
+  <!-- ./col -->
+  <div class="col-lg-3 col-xs-6">
+    <!-- small box -->
+    <div class="small-box bg-yellow">
+      <div class="inner" style="height: 355px">
+        <h3>Contract</h3>
+        <p><i class="fa fa-databas"></i> <span id="balance_charity"></span> LHC</p>
+        <p><i class="fa fa-databas"></i> <span id="accounts"></span> unspent accounts</p>
+        <div style="font-style: italic; text-align: center; padding-top: 20px">
+          Smart contract. Works as an escrow keeping donations before an outcome payment is authorized.
+        </div>
+      </div>
+      <div class="icon">
+        <i class="ion ion-ios-list-outline"></i>
+      </div>
+      <a href="#" class="small-box-footer" onclick="payBackAll()"><i class="fa fa-arrow-circle-left"></i> Pay back</a>
+    </div>
+  </div>
+  <!-- ./col -->
+  <div class="col-lg-3 col-xs-6">
+    <!-- small box -->
+    <div class="small-box bg-red">
+      <div class="inner" style="height: 330px">
+        <h3>Judge</h3>
+
+        <p>External validator</p>
+
+        <div style="font-style: italic; text-align: center; padding-top: 20px">
+          Trusted organization (e.g. government agency) which authorize outcome payments.
+        </div>
+      </div>
+      <div class="icon">
+        <i class="ion ion-android-checkbox-outline"></i>
+      </div>
+      <a href="#" class="small-box-footer" onclick="validateOutcome('Tenancy', 200)">Tenancy agreement (200) <i class="fa fa-arrow-circle-right"></i></a>
+      <a href="#" class="small-box-footer" onclick="validateOutcome('Employment', 100)">Employment contract (100) <i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+  <div class="col-lg-3 col-xs-6">
+    <!-- small box -->
+    <div class="small-box bg-green">
+      <div class="inner" style="height: 383px">
+        <h3>Beneficiary</h3>
+
+        <p><i class="fa fa-database"></i> <span id="balance_beneficiary"></span> LHC</p>
+
+        <div style="font-style: italic; text-align: center; padding-top: 20px">
+          Charity organization which use the money to provide help for homeless people.
+        </div>
+
+      </div>
+      <div class="icon">
+        <i class="ion ion-ios-people-outline"></i>
+      </div>
+    </div>
+  </div>
+  <!-- ./col -->
+</div>
+
+<div class="box box-primary" style="background-color: #F0F0F0; border-color: #ddd">
+  <div class="box-header with-border" style="border-bottom: 1px solid #ddd;">
+    <h3 class="box-title">Blockchain logs</h3>
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body" id="log">
+
+  </div>
+  <!-- /.box-body -->
+</div>
+
+</body>
+</html>
