@@ -34,7 +34,7 @@ We recommend using popular Ethereum test client [testrpc](https://github.com/eth
 
 To run all of the smart contract tests use following truffle command in your console:
 
-    truffle test --network dev
+    truffle test
 
 If you are using testrpc client remember to start it with sufficient number of test accounts:
 
@@ -44,7 +44,7 @@ If you are using testrpc client remember to start it with sufficient number of t
 
 We created a demo dApp so you can interact and test smart contract in a visual environment rather than hacking console scripts. To run this mode please deploy the smart contracts to your blockchain network:
 
-    truffle migrate --network dev
+    truffle migrate
 
 ... and then launch a demo server:
 

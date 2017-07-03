@@ -12,7 +12,7 @@ module.exports = {
     ]
   }),
   networks: {
-    dev: {
+    development: {
       network_id: "*",
       gas: 4000000,
       host: 'localhost',
