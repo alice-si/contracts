@@ -7,12 +7,19 @@
     "type": "git",
     "url": "https://github.com/jakub-wojciechowski/alice-contracts.git"
   },
+  "scripts": {
+    "test": "scripts/test.sh",
+    "console": "truffle console",
+    "coverage": "scripts/coverage.sh",
+    "coveralls": "scripts/coveralls.sh"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jakub-wojciechowski/alice-contracts/issues"
   },
   "homepage": "https://github.com/jakub-wojciechowski/alice-contracts",
-  "dependencies": {
-    "truffle-default-builder": "^2.0.0"
+  "devDependencies": {
+    "truffle-default-builder": "^2.0.0",
+    "truffle": "3.2.2"
   }
 }

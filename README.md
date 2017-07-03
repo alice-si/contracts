@@ -40,6 +40,10 @@ If you are using testrpc client remember to start it with sufficient number of t
 
     testrpc -a 100
 
+You can also use automated test script instead of the previous two commands:
+
+    yarn test
+
 ### Demo dApp
 
 We created a demo dApp so you can interact and test smart contract in a visual environment rather than hacking console scripts. To run this mode please deploy the smart contracts to your blockchain network:
