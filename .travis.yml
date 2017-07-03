@@ -1,0 +1,10 @@
+dist: trusty
+sudo: false
+group: beta
+language: node_js
+node_js:
+  - "6"
+cache:
+  yarn: true
+script:
+  - yarn test
