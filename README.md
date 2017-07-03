@@ -1,5 +1,7 @@
 # Alice Smart Contracts
 
+[![Build Status](https://travis-ci.org/jakub-wojciechowski/alice-contracts.svg?branch=master)](https://travis-ci.org/jakub-wojciechowski/alice-contracts)
+
 This project is a collection of smart contracts that are used by <https://alice.si>.
 
 ### Overview
