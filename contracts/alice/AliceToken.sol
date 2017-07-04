@@ -4,9 +4,9 @@ Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
 
 pragma solidity ^0.4.11;
 
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
-import 'zeppelin-solidity/contracts/token/StandardToken.sol';
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import '../zeppelin/Ownable.sol';
+import '../zeppelin/StandardToken.sol';
+import '../zeppelin/SafeMath.sol';
 
 import "./Token.sol";
 

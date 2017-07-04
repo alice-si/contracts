@@ -8,3 +8,5 @@ cache:
   yarn: true
 script:
   - yarn test
+after_script:
+  - yarn run coveralls
