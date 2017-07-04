@@ -2,7 +2,7 @@
 Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
 */
 
-pragma solidity ^0.4.2;
+pragma solidity ^0.4.11;
 
 import "./Token.sol";
 import "../Owned.sol";

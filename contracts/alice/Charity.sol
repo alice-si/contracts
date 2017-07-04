@@ -1,4 +1,4 @@
-pragma solidity ^0.4.2;
+pragma solidity ^0.4.11;
 
 import "../Owned.sol";
 import "./ImpactRegistry.sol";
