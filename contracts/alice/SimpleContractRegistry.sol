@@ -1,8 +1,8 @@
 pragma solidity ^0.4.11;
 
-import "../Owned.sol";
+import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 
-contract SimpleContractRegistry is Owned {
+contract SimpleContractRegistry is Ownable {
 
   mapping (bytes32 => address) public contracts;
 

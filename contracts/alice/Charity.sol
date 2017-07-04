@@ -1,12 +1,12 @@
 pragma solidity ^0.4.11;
 
-import "../Owned.sol";
+import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import "./ImpactRegistry.sol";
 import "../ContractProvider.sol";
 
 contract Token {function transfer(address _to, uint256 _value);}
 
-contract Charity is Owned {
+contract Charity is Ownable {
     /* Public variables of the token */
     string public name;
     address public judgeAddress;

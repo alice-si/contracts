@@ -1,8 +1,8 @@
 pragma solidity ^0.4.11;
 
-import "../Owned.sol";
+import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 
-contract ImpactRegistry is Owned {
+contract ImpactRegistry is Ownable {
 
   modifier onlyMaster {
     if (msg.sender != owner && msg.sender != masterContract)
