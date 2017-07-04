@@ -1,8 +1,11 @@
 pragma solidity ^0.4.11;
 
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+
 
 contract ImpactRegistry is Ownable {
+  using SafeMath for uint256;
 
   modifier onlyMaster {
     if (msg.sender != owner && msg.sender != masterContract)
@@ -43,10 +46,7 @@ contract ImpactRegistry is Ownable {
       accountIndex.push(_from);
     }
 
-    if (accountBalances[_from] + _value < accountBalances[_from])
-      throw;
-
-    accountBalances[_from] += _value;
+    accountBalances[_from] = accountBalances[_from].add(_value);
   }
 
   function setUnit(uint _value) onlyOwner {
@@ -62,7 +62,7 @@ contract ImpactRegistry is Ownable {
   }
 
   function linkImpact(string _name) onlyOwner {
-    uint left = impact[_name].value - impact[_name].linked;
+    uint left = impact[_name].value.sub(impact[_name].linked);
     if (left > 0) {
 
       uint i = impact[_name].accountCursor;
@@ -79,15 +79,15 @@ contract ImpactRegistry is Ownable {
         }
 
         /* Update balances */
-        accountBalances[accountIndex[i]] -= shard;
+        accountBalances[accountIndex[i]] = accountBalances[accountIndex[i]].sub(shard);
 
         /* Update impact */
         if (impact[_name].values[accountIndex[i]] == 0) {
           impact[_name].addresses[impact[_name].count++] = accountIndex[i];
         }
 
-        impact[_name].values[accountIndex[i]] += shard;
-        impact[_name].linked += shard;
+        impact[_name].values[accountIndex[i]] = impact[_name].values[accountIndex[i]].add(shard);
+        impact[_name].linked = impact[_name].linked.add(shard);
 
         /* Move to next account removing empty ones */
         if (accountBalances[accountIndex[i]] == 0) {

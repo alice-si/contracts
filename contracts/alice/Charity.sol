@@ -1,13 +1,16 @@
 pragma solidity ^0.4.11;
 
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+
 import "./ImpactRegistry.sol";
 import "../ContractProvider.sol";
 
 contract Token {function transfer(address _to, uint256 _value);}
 
 contract Charity is Ownable {
-    /* Public variables of the token */
+    using SafeMath for uint256;
+
     string public name;
     address public judgeAddress;
     address public beneficiaryAddress;
@@ -49,19 +52,13 @@ contract Charity is Ownable {
     }
 
     function notify(address _from, uint _value) onlyOwner {
-        if (total + _value < total)
-          throw;
-
-        total += _value;
+        total = total.add(_value);
         ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerDonation(_from, _value);
         DonationEvent(_from, _value);
     }
 
     function fund(uint _value) onlyOwner {
-        if (total + _value < total)
-          throw;
-
-        total += _value;
+        total = total.add(_value);
     }
 
     function unlockOutcome(string _name, uint _value) {
@@ -70,7 +67,7 @@ contract Charity is Ownable {
 
         address tokenAddress = ContractProvider(CONTRACT_PROVIDER_ADDRESS).contracts("digitalGBP");
         Token(tokenAddress).transfer(beneficiaryAddress, _value);
-        total -= _value;
+        total = total.sub(_value);
 
         ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
 
@@ -82,7 +79,7 @@ contract Charity is Ownable {
         if (balance > 0) {
             address tokenAddress = ContractProvider(CONTRACT_PROVIDER_ADDRESS).contracts("digitalGBP");
             Token(tokenAddress).transfer(account, balance);
-            total -= accountBalances[account];
+            total = total.sub(accountBalances[account]);
             ImpactRegistry(IMPACT_REGISTRY_ADDRESS).payBack(account);
         }
     }

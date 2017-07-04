@@ -4,10 +4,11 @@ Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
 
 pragma solidity ^0.4.11;
 
-import "./Token.sol";
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'zeppelin-solidity/contracts/token/StandardToken.sol';
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+
+import "./Token.sol";
 
 contract AliceToken is StandardToken, Ownable {
     using SafeMath for uint256;
