@@ -3,14 +3,20 @@
 [![Build Status](https://travis-ci.org/alice-si/contracts.svg?branch=master)](https://travis-ci.org/alice-si/contracts)
 [![Join the chat at https://gitter.im/alice-si/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alice-si/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This project is a collection of smart contracts that are used by <https://alice.si>.
+This project is a collection of smart contracts used by Alice, a social impact platform built on Ethereum <https://alice.si>.
 
 ### Overview
 
-Smart contracts implement a Pay for success donation model. After a donor sends money to the campaign, a corresponding amount of Alice Tokens are being generated and credited to the Charity contract. Tokens are held in an escrow and are released only if a dedicated Validator confirms that the expected outcome has been achieved. Tokens are moved to the Beneficiary account after the validation is performed. Any outstanding tokens may be returned to donors and reused for future donations.
+The first application launched by Alice uses smart contracts to implement a "pay for success" donation model, where donors only pay if the charitable projects they give to achieve their goals.
+
+Each charity project encodes a list of "goals" that the charity aims to achieve, and each goal is assigned a price that the charity will receive if/when the goal is provably achieved.
+
+Donors give to projects on the Alice platform using fiat, and the payment logic is implemented on the blockchain using a stablecoin token pegged to the value of their gift. When a donor sends money to a project, the corresponding amount of tokens is minted and credited by the Charity contract.  These tokens are held in escrow until a dedicated Validator confirms that an expected goal pursued by the charity has been achieved. Once this validation has been performed, the price assigned to the goal is then transferred to the charity's account. If the charity does not achieve any goals, outstanding tokens are unlocked and returned to donors. They can then be reused for future donations.
 
 ### Installation
-This project requires [node-js](https://github.com/nodejs/node) runtime and uses [truffle](https://github.com/trufflesuite/truffle) Ethereum smart contracts development framework. In order to run it, install truffle first:
+This project requires [node-js](https://github.com/nodejs/node) runtime and uses [truffle](https://github.com/trufflesuite/truffle) as the Ethereum smart contract development framework.
+
+In order to run it, install truffle first:
 
     npm install -g truffle
 
@@ -35,21 +41,21 @@ We recommend using popular Ethereum test client [testrpc](https://github.com/eth
 
 ### Running tests
 
-To run all of the smart contract tests use following truffle command in your console:
+To run all of the smart contract tests, use the following truffle command in your console:
 
     truffle test
 
-If you are using testrpc client remember to start it with sufficient number of test accounts:
+If you are using the testrpc client, remember to start it with a sufficient number of test accounts:
 
     testrpc -a 100
 
-You can also use automated test script instead of the previous two commands:
+You can also use an automated test script instead of the previous two commands:
 
     yarn test
 
 ### Demo dApp
 
-We created a demo dApp so you can interact and test smart contract in a visual environment rather than hacking console scripts. To run this mode please deploy the smart contracts to your blockchain network:
+We created a demo dApp so you can interact and test the smart contracts in a visual environment rather than hacking console scripts. To run this mode, deploy the smart contracts to your blockchain network:
 
     truffle migrate
 
@@ -57,12 +63,12 @@ We created a demo dApp so you can interact and test smart contract in a visual e
 
     truffle serve
 
-This demo dApp should be available at: http://localhost:8080/ a look like that:
+This demo dApp should be available at: http://localhost:8080/ and look like this:
 ![screenshot](https://s3.eu-west-2.amazonaws.com/alice-res/alice-dApp.png)
 
 ## Contributions
 
-All comments, ideas for improvements and pull requests are welcomed. We want to improve the project based on feedback from the community.
+All comments and ideas for improvements and pull requests are welcomed. We want to improve the project based on feedback from the community.
 
 ## License
 
