@@ -13,7 +13,7 @@ contract('Single donation', function(accounts) {
   it("should link charity to judge", function(done) {
     Charity.deployed().then(function(instance) {
       charity = instance;
-      return charity.setJudge(judge, 10, {from: main})
+      return charity.setJudge(judge, {from: main})
     }).then(function() {
       return charity.judgeAddress.call();
     }).then(function(address) {
@@ -24,7 +24,7 @@ contract('Single donation', function(accounts) {
   });
 
   it("should link charity to beneficiary", function(done) {
-    charity.setBeneficiary(beneficiary, 10, {from: main}).then(function() {
+    charity.setBeneficiary(beneficiary, {from: main}).then(function() {
       return charity.beneficiaryAddress.call();
     }).then(function(address) {
       return assert.equal(address, beneficiary, "Beneficiary address wasn't set correctly");
