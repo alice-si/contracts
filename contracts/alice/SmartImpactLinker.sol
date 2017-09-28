@@ -29,11 +29,43 @@ contract SmartImpactLinker is Ownable {
         unit = _value;
     }
 
-    function linkImpact(string impactId) onlyOwner {
-//        uint left = impact.value.sub(impact.linked);
-//        if (left > 0) {
-//
-//            uint i = linkingCursor[impact.name];
+    function linkImpact(string impactId) external onlyRegistry {
+      uint value = registry.getImpactTotalValue(impactId);
+      uint linked = registry.getImpactLinked(impactId);
+      uint left = value.sub(linked);
+
+      if (left > 0) {
+        uint i = linkingCursors[impactId];
+        address account = registry.getAccount(i);
+        uint balance = registry.getBalance(account);
+        if (balance >= 0) {
+
+          //Calculate impact
+          uint impactVal = balance;
+          if (impactVal > left) {
+              impactVal = left;
+          }
+          if (impactVal > unit) {
+              impactVal = unit;
+          }
+
+          //Update registry
+          registry.updateImpact(impactId, account, impactVal);
+          registry.updateBalance(i, balance.sub(impactVal));
+
+          //Update cursor
+          if (balance == impactVal) {
+            i--;
+          }
+
+          uint accountsCount = registry.getAccountsCount();
+          if (accountsCount > 0) {
+            linkingCursors[impactId] = (i + 1) % accountsCount;
+          } else {
+            linkingCursors[impactId] = 0;
+          }
+        }
+      }
 //
 //            if (accountBalances[accountIndex[i]] >= 0) {
 //                /*Calculate shard */
@@ -67,11 +99,7 @@ contract SmartImpactLinker is Ownable {
 //
 //            /* Update cursor */
 //
-//            if (accountIndex.length > 0) {
-//                i = (i + 1) % accountIndex.length;
-//            } else {
-//                i = 0;
-//            }
+//
 //
 //            impact[_name].accountCursor = i;
 //        }
