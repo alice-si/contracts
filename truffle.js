@@ -1,3 +1,6 @@
+require('babel-register');
+require('babel-polyfill');
+
 var DefaultBuilder = require("truffle-default-builder");
 
 module.exports = {
