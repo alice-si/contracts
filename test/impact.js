@@ -58,78 +58,57 @@ contract('Singe impactRegistry donation', function(accounts) {
 
 });
 
-// contract('Donation below unit', function(accounts) {
-//   var main = accounts[0];
-//   var donor1 = accounts[1];
-//
-//   it("should attach master contract", function(done) {
-//     ImpactRegistry.deployed().then(function(instance) {
-//       impactRegistry = instance;
-//       return impactRegistry.setMasterContract(main, {from: main});
-//     }).then(function() {
-//       return impactRegistry.masterContract();
-//     }).then(function(address) {
-//       return assert.equal(address, main, "Master contract hasn't been set up correctly");
-//     })
-//       .then(done)
-//       .catch(done);
-//   });
-//
-//   it("should correctly set an unit of impact", function(done) {
-//     impactRegistry.setUnit(10, {from: main}).then(function() {
-//       return impactRegistry.unit.call();
-//     }).then(function(unit) {
-//       return assert.equal(unit, 10, "Unit for impact reconciliation hasn't been set up correctly");
-//     })
-//       .then(done)
-//       .catch(done);
-//   });
-//
-//   it("should register impactRegistry from donor1", function (done) {
-//     impactRegistry.registerDonation(donor1, 7, {from: main}).then(function () {
-//       return impactRegistry.getBalance.call(donor1, {from: main})
-//     }).then(function (balance) {
-//       return assert.equal(balance.valueOf(), 7, "7 wasn't in registry after donation");
-//     })
-//       .then(done)
-//       .catch(done);
-//   });
-//
-//
-//   it("should register outcome", function (done) {
-//     impactRegistry.registerOutcome("outcome", 7, {from: main}).then(function () {
-//       return impactRegistry.getImpactCount.call("outcome", {from: main})
-//     }).then(function (count) {
-//       return assert.equal(count.valueOf(), 0, "Should be no impactRegistry before linking");
-//     })
-//       .then(done)
-//       .catch(done);
-//   });
-//
-//   it("should link impactRegistry", function (done) {
-//     impactRegistry.linkImpact("outcome", {from: main}).then(function () {
-//       return impactRegistry.getImpactCount.call("outcome", {from: main})
-//     }).then(function (count) {
-//       assert.equal(count.valueOf(), 1, "Should have impactRegistry after linking");
-//       return impactRegistry.getImpactLinked.call("outcome")
-//     }).then(function (linked) {
-//       assert.equal(linked.valueOf(), 7, "Should link all of the impactRegistry");
-//       return impactRegistry.getImpactDonor.call("outcome", 0)
-//     }).then(function (donor) {
-//       assert.equal(donor, donor1, "Should set donor for impactRegistry");
-//       return impactRegistry.getImpactValue.call("outcome", donor1)
-//     }).then(function (val) {
-//       assert.equal(val.valueOf(), 7, "Should set value for impactRegistry");
-//       return impactRegistry.getBalance.call(donor1);
-//     }).then(function (balance) {
-//       assert.equal(balance.valueOf(), 0, "Should be empty balance after cleaning account");
-//     })
-//       .then(done)
-//       .catch(done);
-//   });
-//
-//
-// });
+contract('Donation below unit', function(accounts) {
+  var donor1 = accounts[1];
+  var registry, linker;
+
+  it("should configure impact registry", async function() {
+      registry = await ImpactRegistry.deployed();
+      linker = await Linker.new(registry.address, 10);
+      await registry.setLinker(linker.address);
+
+      (await linker.unit()).should.be.bignumber.equal(10);
+      (await linker.registry()).should.be.equal(registry.address);
+  });
+
+
+  it("should register impactRegistry from donor1", async function () {
+      await registry.registerDonation(donor1, 7);
+
+      var balance = await registry.getBalance(donor1);
+
+      balance.should.be.bignumber.equal(7);
+  });
+
+
+  it("should register outcome", async function () {
+      await registry.registerOutcome("single7", 7);
+
+      //Global for impact
+      (await registry.getImpactCount("single7")).should.be.bignumber.equal(0);
+      (await registry.getImpactTotalValue("single7")).should.be.bignumber.equal(7);
+      (await registry.getImpactLinked("single7")).should.be.bignumber.equal(0);
+
+      //Per donor
+      (await registry.getImpactValue("single7", donor1)).should.be.bignumber.equal(0);
+  });
+
+  it("should link impactRegistry", async function () {
+      await registry.linkImpact("single7");
+
+      //Global for impact
+      (await registry.getImpactCount("single7")).should.be.bignumber.equal(1);
+      (await registry.getImpactTotalValue("single7")).should.be.bignumber.equal(7);
+      (await registry.getImpactLinked("single7")).should.be.bignumber.equal(7);
+
+      //Per donor
+      (await registry.getBalance(donor1)).should.be.bignumber.equal(0);
+      (await registry.getImpactDonor("single7", 0)).should.be.equal(donor1);
+      (await registry.getImpactValue("single7", donor1)).should.be.bignumber.equal(7);
+  });
+
+
+});
 //
 // contract('Donation above unit', function(accounts) {
 //   var main = accounts[0];
