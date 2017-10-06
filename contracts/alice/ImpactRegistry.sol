@@ -104,7 +104,7 @@ contract ImpactRegistry is Ownable {
     return accountIndex.length;
   }
 
-  function getAccount(uint _index) returns(address) {
+  function getAccount(uint _index) constant returns(address) {
     return accountIndex[_index];
   }
 
@@ -116,11 +116,11 @@ contract ImpactRegistry is Ownable {
     return impacts[outcome].count;
   }
 
-  function getImpactLinked(string outcome) returns(uint) {
+  function getImpactLinked(string outcome) constant returns(uint) {
     return impacts[outcome].linked;
   }
 
-  function getImpactTotalValue(string outcome) returns(uint) {
+  function getImpactTotalValue(string outcome) constant returns(uint) {
     return impacts[outcome].value;
   }
 
