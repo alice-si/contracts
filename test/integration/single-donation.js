@@ -2,6 +2,14 @@ var Charity = artifacts.require("Charity");
 var SimpleContractRegistry = artifacts.require("SimpleContractRegistry");
 var AliceToken = artifacts.require("AliceToken");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
+var Linker = artifacts.require("SmartImpactLinker");
+
+const BigNumber = web3.BigNumber
+
+const should = require('chai')
+	.use(require('chai-as-promised'))
+	.use(require('chai-bignumber')(BigNumber))
+	.should()
 
 contract('Single donation', function(accounts) {
   var main = accounts[0];
@@ -115,6 +123,14 @@ contract('Single donation', function(accounts) {
       .then(done)
       .catch(done);
   });
+
+	it("should configure linker", async function () {
+		linker = await Linker.new(impactRegistry.address, 10);
+		await impactRegistry.setLinker(linker.address);
+
+		(await linker.unit()).should.be.bignumber.equal(10);
+		(await linker.registry()).should.be.equal(impactRegistry.address);
+	});
 
   it("should link impact", function (done) {
     impactRegistry.linkImpact("Outcome", {from: main}).then(function () {
