@@ -12,7 +12,6 @@ const should = require('chai')
     .should()
 
 contract('Smart Impact Linker', function(accounts) {
-    var main = accounts[0];
     var donor1 = accounts[1];
     var donor2 = accounts[2];
     var registry, linker;
