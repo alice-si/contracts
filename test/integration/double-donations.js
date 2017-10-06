@@ -2,6 +2,14 @@ var Charity = artifacts.require("Charity");
 var SimpleContractRegistry = artifacts.require("SimpleContractRegistry");
 var AliceToken = artifacts.require("AliceToken");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
+var Linker = artifacts.require("SmartImpactLinker");
+
+const BigNumber = web3.BigNumber;
+
+const should = require('chai')
+	.use(require('chai-as-promised'))
+	.use(require('chai-bignumber')(BigNumber))
+	.should();
 
 contract('Double donations', function(accounts) {
   var main = accounts[0];
@@ -133,15 +141,13 @@ contract('Double donations', function(accounts) {
       .catch(done);
   });
 
-  it("should correctly set an unit of impact", function(done) {
-    impactRegistry.setUnit(10, {from: main}).then(function() {
-      return impactRegistry.unit.call();
-    }).then(function(unit) {
-      return assert.equal(unit, 10, "Unit for impact reconciliation hasn't been set up correctly");
-    })
-      .then(done)
-      .catch(done);
-  });
+	it("should configure linker", async function () {
+		linker = await Linker.new(impactRegistry.address, 10);
+		await impactRegistry.setLinker(linker.address);
+
+		(await linker.unit()).should.be.bignumber.equal(10);
+		(await linker.registry()).should.be.equal(impactRegistry.address);
+	});
 
   it("should link impactRegistry", function (done) {
     impactRegistry.linkImpact("Outcome", {from: main}).then(function () {
