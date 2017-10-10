@@ -2,7 +2,7 @@ pragma solidity ^0.4.11;
 
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import './SmartImpactLinker.sol';
+import './ImpactLinker.sol';
 
 
 contract ImpactRegistry is Ownable {
@@ -21,7 +21,7 @@ contract ImpactRegistry is Ownable {
   }
 
   address public masterContract;
-  SmartImpactLinker public linker;
+  ImpactLinker public linker;
 
   /* This creates a map with donations per user */
   mapping (address => uint) accountBalances;
@@ -65,7 +65,7 @@ contract ImpactRegistry is Ownable {
       masterContract = _contractAddress;
   }
 
-  function setLinker(SmartImpactLinker _linker) onlyOwner {
+  function setLinker(ImpactLinker _linker) onlyOwner {
     linker = _linker;
   }
 

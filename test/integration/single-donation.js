@@ -2,7 +2,7 @@ var Charity = artifacts.require("Charity");
 var SimpleContractRegistry = artifacts.require("SimpleContractRegistry");
 var AliceToken = artifacts.require("AliceToken");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
-var Linker = artifacts.require("SmartImpactLinker");
+var Linker = artifacts.require("FlexibleImpactLinker");
 
 const BigNumber = web3.BigNumber
 

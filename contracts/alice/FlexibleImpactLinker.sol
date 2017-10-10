@@ -1,27 +1,20 @@
 pragma solidity ^0.4.11;
 
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import './ImpactRegistry.sol';
+import './ImpactLinker.sol';
 
 
-contract SmartImpactLinker is Ownable {
+contract FlexibleImpactLinker is ImpactLinker {
     using SafeMath for uint256;
 
-    ImpactRegistry public registry;
     uint public unit;
     /* Structures that store a match between validated outcomes and donations */
     mapping (string => ImpactRegistry.Impact) impact;
     mapping (string => uint) linkingCursors;
 
-
-    modifier onlyRegistry {
-        require (msg.sender == address(registry));
-        _;
-    }
-
-    function SmartImpactLinker(ImpactRegistry _impactRegistry, uint _unit) {
-        registry = _impactRegistry;
+   function FlexibleImpactLinker(ImpactRegistry _impactRegistry, uint _unit)
+     ImpactLinker(_impactRegistry) {
         unit = _unit;
     }
 

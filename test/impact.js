@@ -1,5 +1,5 @@
 var ImpactRegistry = artifacts.require("ImpactRegistry");
-var Linker = artifacts.require("SmartImpactLinker");
+var Linker = artifacts.require("FlexibleImpactLinker");
 
 const BigNumber = web3.BigNumber
 
