@@ -42,9 +42,7 @@ contract FlexibleImpactLinker is ImpactLinker {
               impactVal = unit;
           }
 
-          //Update registry
-          registry.updateImpact(impactId, account, impactVal);
-          registry.updateBalance(i, balance.sub(impactVal));
+          registry.registerImpact(impactId, i, impactVal);
 
           //Update cursor
           if (balance == impactVal) {

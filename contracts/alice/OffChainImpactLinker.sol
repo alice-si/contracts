@@ -12,12 +12,8 @@ contract OffChainImpactLinker is Ownable, ImpactLinker {
    function OffChainImpactLinker(ImpactRegistry _impactRegistry)
      ImpactLinker(_impactRegistry) { }
 
-   function linkDirectly(string _impactId, address _account, uint _impactVal) external onlyOwner {
-     require(registry.getBalance(_account) >= _impactVal);
-     uint unLinked = registry.getImpactTotalValue(_impactId).sub(registry.getImpactLinked(_impactId));
-     require(unLinked >= _impactVal);
-
-     //registry.registerImpact(_impactId, _account, _impactVal);
+   function linkDirectly(string _impactId, uint _accountIndex, uint _impactVal) external onlyOwner {
+     registry.registerImpact(_impactId, _accountIndex, _impactVal);
    }
 
 

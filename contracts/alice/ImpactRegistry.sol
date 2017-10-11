@@ -80,22 +80,32 @@ contract ImpactRegistry is Ownable {
     accountBalances[_account] = 0;
   }
 
-  function updateBalance(uint _index, uint _newBalance) onlyLinker {
-    accountBalances[accountIndex[_index]] = _newBalance;
-    if (_newBalance == 0) {
+
+
+  function registerImpact(string _impactId, uint _accountIndex, uint _linkedValue) onlyLinker {
+    Impact impact = impacts[_impactId];
+    address account = this.getAccount(_accountIndex);
+    if (impact.values[account] == 0) {
+      impact.addresses[impact.count++] = account;
+    }
+
+    require(impact.value.sub(impact.linked) >= _linkedValue);
+
+    updateBalance(_accountIndex, _linkedValue);
+
+    impact.values[account] = impact.values[account].add(_linkedValue);
+    impact.linked = impact.linked.add(_linkedValue);
+  }
+
+  function updateBalance(uint _index, uint _linkedValue) internal {
+    uint oldBalance = accountBalances[accountIndex[_index]];
+    uint newBalance = oldBalance.sub(_linkedValue);
+
+    accountBalances[accountIndex[_index]] = newBalance;
+    if (newBalance == 0) {
       accountIndex[_index] = accountIndex[accountIndex.length-1];
       accountIndex.length = accountIndex.length - 1;
     }
-  }
-
-  function updateImpact(string _impactId, address _account, uint _impactValue) onlyLinker {
-    Impact impact = impacts[_impactId];
-    if (impact.values[_account] == 0) {
-      impact.addresses[impact.count++] = _account;
-    }
-
-    impact.values[_account] = impact.values[_account].add(_impactValue);
-    impact.linked = impact.linked.add(_impactValue);
   }
 
 
