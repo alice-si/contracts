@@ -59,43 +59,7 @@ contract FlexibleImpactLinker is ImpactLinker {
           }
         }
       }
-//
-//            if (accountBalances[accountIndex[i]] >= 0) {
-//                /*Calculate shard */
-//                uint shard = accountBalances[accountIndex[i]];
-//                if (shard > left) {
-//                    shard = left;
-//                }
-//
-//                if (shard > unit) {
-//                    shard = unit;
-//                }
-//
-//                /* Update balances */
-//                accountBalances[accountIndex[i]] = accountBalances[accountIndex[i]].sub(shard);
-//
-//                /* Update impact */
-//                if (impact[_name].values[accountIndex[i]] == 0) {
-//                    impact[_name].addresses[impact[_name].count++] = accountIndex[i];
-//                }
-//
-//                impact[_name].values[accountIndex[i]] = impact[_name].values[accountIndex[i]].add(shard);
-//                impact[_name].linked = impact[_name].linked.add(shard);
-//
-//                /* Move to next account removing empty ones */
-//                if (accountBalances[accountIndex[i]] == 0) {
-//                    accountIndex[i] = accountIndex[accountIndex.length-1];
-//                    accountIndex.length = accountIndex.length - 1;
-//                    i--;
-//                }
-//            }
-//
-//            /* Update cursor */
-//
-//
-//
-//            impact[_name].accountCursor = i;
-//        }
+
     }
 
 }

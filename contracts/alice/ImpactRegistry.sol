@@ -34,7 +34,6 @@ contract ImpactRegistry is Ownable {
   struct Impact {
     uint value;
     uint linked;
-    uint accountCursor;
     uint count;
     mapping(uint => address) addresses;
     mapping(address => uint) values;
@@ -70,7 +69,7 @@ contract ImpactRegistry is Ownable {
   }
 
   function registerOutcome(string _name, uint _value) onlyMaster{
-    impacts[_name] = Impact(_value, 0, 0, 0);
+    impacts[_name] = Impact(_value, 0, 0);
   }
 
   function linkImpact(string _name) onlyOwner {
