@@ -11,6 +11,7 @@ contract DonationWallet is Ownable {
 
   function donate(ERC20 _token, uint _amount, Project _project) onlyOwner {
     _token.approve(address(_project), _amount);
+    _project.donateFromWallet(_amount);
   }
 
   function refund(ERC20 _token, uint _amount) onlyOwner {
