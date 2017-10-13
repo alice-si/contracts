@@ -8,7 +8,7 @@ import "../ContractProvider.sol";
 
 contract Token {function transfer(address _to, uint256 _value);}
 
-contract Charity is Ownable {
+contract Project is Ownable {
     using SafeMath for uint256;
 
     string public name;

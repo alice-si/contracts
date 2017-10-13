@@ -1,4 +1,4 @@
-var Charity = artifacts.require("Charity");
+var Project = artifacts.require("project");
 var SimpleContractRegistry = artifacts.require("SimpleContractRegistry");
 var AliceToken = artifacts.require("AliceToken");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
@@ -16,14 +16,14 @@ contract('Single donation', function(accounts) {
   var donor = accounts[1];
   var judge = accounts[3];
   var beneficiary = accounts[4];
-  var charity, token, contractProvider, impactRegistry;
+  var project, token, contractProvider, impactRegistry;
 
-  it("should link charity to judge", function(done) {
-    Charity.deployed().then(function(instance) {
-      charity = instance;
-      return charity.setJudge(judge, {from: main})
+  it("should link project to judge", function(done) {
+    Project.deployed().then(function(instance) {
+      project = instance;
+      return project.setJudge(judge, {from: main})
     }).then(function() {
-      return charity.judgeAddress.call();
+      return project.judgeAddress.call();
     }).then(function(address) {
       return assert.equal(address, judge, "Judge address wasn't set correctly");
     })
@@ -31,9 +31,9 @@ contract('Single donation', function(accounts) {
       .catch(done);
   });
 
-  it("should link charity to beneficiary", function(done) {
-    charity.setBeneficiary(beneficiary, {from: main}).then(function() {
-      return charity.beneficiaryAddress.call();
+  it("should link project to beneficiary", function(done) {
+    project.setBeneficiary(beneficiary, {from: main}).then(function() {
+      return project.beneficiaryAddress.call();
     }).then(function(address) {
       return assert.equal(address, beneficiary, "Beneficiary address wasn't set correctly");
     })
@@ -41,12 +41,12 @@ contract('Single donation', function(accounts) {
       .catch(done);
   });
 
-  it("should link charity to contract provider", function(done) {
+  it("should link project to contract provider", function(done) {
     SimpleContractRegistry.deployed().then(function(instance) {
       contractProvider = instance;
-      return charity.setContractProvider(contractProvider.address, {from: main})
+      return project.setContractProvider(contractProvider.address, {from: main})
     }).then(function() {
-      return charity.CONTRACT_PROVIDER_ADDRESS.call();
+      return project.CONTRACT_PROVIDER_ADDRESS.call();
     }).then(function(address) {
       return assert.equal(address, contractProvider.address, "Contract provider address wasn't set correctly");
     })
@@ -54,12 +54,12 @@ contract('Single donation', function(accounts) {
       .catch(done);
   });
 
-  it("should link charity to impact registry", function(done) {
+  it("should link project to impact registry", function(done) {
     ImpactRegistry.deployed().then(function(instance) {
       impactRegistry = instance;
-      return charity.setImpactRegistry(impactRegistry.address, {from: main})
+      return project.setImpactRegistry(impactRegistry.address, {from: main})
     }).then(function() {
-      return charity.IMPACT_REGISTRY_ADDRESS.call();
+      return project.IMPACT_REGISTRY_ADDRESS.call();
     }).then(function(address) {
       return assert.equal(address, impactRegistry.address, "Impact registry address wasn't set correctly");
     })
@@ -68,12 +68,12 @@ contract('Single donation', function(accounts) {
   });
 
   it("should update balance after notification", function (done) {
-    charity.notify(donor, 10, {from: main}).then(function () {
-      return charity.total()
+    project.notify(donor, 10, {from: main}).then(function () {
+      return project.total()
     }).then(function (total) {
-      return assert.equal(total.valueOf(), 10, "10 wasn't in token charity balance after the donation");
+      return assert.equal(total.valueOf(), 10, "10 wasn't in token project balance after the donation");
     }).then(function() {
-      return charity.getBalance.call(donor)
+      return project.getBalance.call(donor)
     }).then(function(balance) {
       return assert.equal(balance.valueOf(), 10, "10 wasn't in donor balance");
     })
@@ -93,8 +93,8 @@ contract('Single donation', function(accounts) {
   });
 
   it("should mint tokens", function (done) {
-    token.mint(charity.address, 10, {from: main, gas: 300000}).then(function () {
-      return token.balanceOf.call(charity.address, {from: main})
+    token.mint(project.address, 10, {from: main, gas: 300000}).then(function () {
+      return token.balanceOf.call(project.address, {from: main})
     }).then(function (balance) {
       return assert.equal(balance.valueOf(), 10, "10 wasn't minted");
     })
@@ -103,18 +103,18 @@ contract('Single donation', function(accounts) {
   });
 
   it("should unlock outcome", function (done) {
-    token.balanceOf.call(charity.address).then(function (balance) {
-      return assert.equal(balance.valueOf(), 10, "10 wasn't in charity before unlocking outcome");
+    token.balanceOf.call(project.address).then(function (balance) {
+      return assert.equal(balance.valueOf(), 10, "10 wasn't in project before unlocking outcome");
     }).then(function () {
       return token.balanceOf.call(beneficiary);
     }).then(function (balance) {
       return assert.equal(balance.valueOf(), 0, "0 wasn't in beneficiary before unlocking outcome");
     }).then(function () {
-      return charity.unlockOutcome("Outcome", 10, {from: judge});
+      return project.unlockOutcome("Outcome", 10, {from: judge});
     }).then(function() {
-      return token.balanceOf.call(charity.address);
+      return token.balanceOf.call(project.address);
     }).then(function (balance) {
-      return assert.equal(balance.valueOf(), 0, "0 wasn't in charity after unlocking outcome");
+      return assert.equal(balance.valueOf(), 0, "0 wasn't in project after unlocking outcome");
     }).then(function () {
       return token.balanceOf.call(beneficiary);
     }).then(function (balance) {

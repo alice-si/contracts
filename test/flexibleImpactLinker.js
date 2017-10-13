@@ -1,4 +1,4 @@
-var Charity = artifacts.require("Charity");
+var Project = artifacts.require("Project");
 var SimpleContractRegistry = artifacts.require("SimpleContractRegistry");
 var AliceToken = artifacts.require("AliceToken");
 var ImpactRegistry = artifacts.require("ImpactRegistry");

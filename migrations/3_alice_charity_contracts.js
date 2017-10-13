@@ -1,4 +1,4 @@
-var Charity = artifacts.require("Charity");
+var Project = artifacts.require("Project");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
 var SimpleContractRegistry = artifacts.require("SimpleContractRegistry");
 
@@ -7,10 +7,10 @@ module.exports = function(deployer, network, accounts) {
   var beneficiaryAccount = accounts[2];
   var unit = 10;
 
-  deployer.deploy(Charity, "London Homeless"
+  deployer.deploy(Project, "London Homeless"
   ).then(function() {
-    console.log("Charity deployed to: " + Charity.address);
-    return deployer.deploy(ImpactRegistry, Charity.address, 1000);
+    console.log("Project deployed to: " + Project.address);
+    return deployer.deploy(ImpactRegistry, Project.address, 1000);
   }).then(function() {
     console.log("Unit set to : " + unit);
     return ImpactRegistry.deployed().then(function(instance) {
@@ -18,25 +18,25 @@ module.exports = function(deployer, network, accounts) {
     });
   }).then(function() {
     console.log("Impact deployed to: " + ImpactRegistry.address);
-    return Charity.deployed().then(function(instance) {
+    return Project.deployed().then(function(instance) {
       return instance.setImpactRegistry(ImpactRegistry.address);
     });
   }).then(function() {
-    console.log("Charity linked to impact: " + ImpactRegistry.address);
-    return Charity.deployed().then(function(instance) {
+    console.log("Project linked to impact: " + ImpactRegistry.address);
+    return Project.deployed().then(function(instance) {
       return instance.setJudge(judgeAccount);
     });
   }).then(function() {
-    console.log("Charity linked to judge");
-    return Charity.deployed().then(function(instance) {
+    console.log("Project linked to judge");
+    return Project.deployed().then(function(instance) {
       return instance.setBeneficiary(beneficiaryAccount);
     });
   }).then(function() {
-    console.log("Charity linked to beneficiary");
-    return Charity.deployed().then(function(instance) {
+    console.log("Project linked to beneficiary");
+    return Project.deployed().then(function(instance) {
       return instance.setContractProvider(SimpleContractRegistry.address);
     });
   }).then(function() {
-    console.log("Charity linked to Contract Provider");
+    console.log("Project linked to Contract Provider");
   });
 };
