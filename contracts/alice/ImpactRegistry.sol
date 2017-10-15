@@ -81,7 +81,7 @@ contract ImpactRegistry is Ownable {
 
 
   function registerImpact(string _impactId, uint _accountIndex, uint _linkedValue) onlyLinker {
-    Impact impact = impacts[_impactId];
+    Impact storage impact = impacts[_impactId];
     address account = this.getAccount(_accountIndex);
     if (impact.values[account] == 0) {
       impact.addresses[impact.count++] = account;
