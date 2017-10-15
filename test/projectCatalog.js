@@ -1,4 +1,5 @@
 var ProjectCatalog = artifacts.require("ProjectCatalog");
+var Project = artifacts.require("Project");
 
 const BigNumber = web3.BigNumber
 
@@ -9,20 +10,22 @@ const should = require('chai')
 
 contract('ProjectCatalog', function(accounts) {
 	var owner = accounts[0];
+	var project;
 	var projectCatalog;
 
 	before("deploy Privileged contract", async function() {
 		projectCatalog = await ProjectCatalog.new();
 	});
 
-	it("should correctly set initial owner", async function() {
-		// (await ownableWithRecovery.owner()).should.be.equal(initialOwner);
-		//
-		// (await ownableWithRecovery.recoveryVote(recovery1)).should.be.equal(initialOwner);
-		// (await ownableWithRecovery.recoveryVote(recovery2)).should.be.equal(initialOwner);
-		// (await ownableWithRecovery.recoveryVote(recovery3)).should.be.equal(initialOwner);
-		//
-		// (await ownableWithRecovery.voteCount(initialOwner)).should.be.bignumber.equal(3);
+	it("should add a project to catalog", async function() {
+		project = await Project.deployed();
+		await projectCatalog.addProject("PROJECT", project.address);
+
+		(await projectCatalog.getProjectAddress("PROJECT")).should.be.equal(project.address);
+	});
+
+	it("should prevent adding the same project again", async function() {
+		await projectCatalog.addProject("PROJECT", project.address).should.be.rejectedWith('invalid opcode');
 	});
 
 });
