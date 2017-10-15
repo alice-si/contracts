@@ -53,11 +53,4 @@ contract OwnableWithRecovery is Ownable {
         }
     }
 
-    /**
-     * @dev Allows the current owner to transfer control of the contract to a newOwner.
-     */
-    function revokeTransfer() public {
-
-    }
-
 }
