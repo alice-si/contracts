@@ -27,7 +27,7 @@ contract Project is Ownable {
     uint public total;
 
     /* This generates a public event on the blockchain that will notify clients */
-    event OutcomeEvent(string name, uint value);
+    event OutcomeEvent(string id, uint value);
     event DonationEvent(address indexed from, uint value);
 
     function Charity(string _name) {
