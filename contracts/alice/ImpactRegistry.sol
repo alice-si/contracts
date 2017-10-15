@@ -9,14 +9,12 @@ contract ImpactRegistry is Ownable {
   using SafeMath for uint256;
 
   modifier onlyMaster {
-    if (msg.sender != owner && msg.sender != masterContract)
-        throw;
+    require (msg.sender == owner || msg.sender == masterContract);
     _;
   }
 
   modifier onlyLinker {
-    if (msg.sender != address(linker))
-    throw;
+    require(msg.sender != address(linker));
     _;
   }
 
@@ -139,11 +137,6 @@ contract ImpactRegistry is Ownable {
 
   function getImpactValue(string outcome, address addr) constant returns(uint) {
     return impacts[outcome].values[addr];
-  }
-
-  /* This unnamed function is called whenever someone tries to send ether to it */
-  function () {
-    throw;     // Prevents accidental sending of ether
   }
 
 }

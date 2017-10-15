@@ -72,8 +72,8 @@ contract Project is Ownable {
     }
 
     function unlockOutcome(string _name, uint _value) {
-        if (msg.sender != judgeAddress) throw;
-        if (total < _value) throw;
+        require (msg.sender == judgeAddress);
+        require (_value <= total);
 
         address tokenAddress = ContractProvider(CONTRACT_PROVIDER_ADDRESS).contracts("digitalGBP");
         ERC20(tokenAddress).transfer(beneficiaryAddress, _value);
@@ -103,10 +103,5 @@ contract Project is Ownable {
         address tokenAddress = ContractProvider(CONTRACT_PROVIDER_ADDRESS).contracts("digitalGBP");
         ERC20(tokenAddress).transfer(escapeAddress, total);
         total = 0;
-    }
-
-    /* This unnamed function is called whenever someone tries to send ether to it */
-    function () {
-        throw;     // Prevents accidental sending of ether
     }
 }
