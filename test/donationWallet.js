@@ -1,4 +1,5 @@
-var Project = artifacts.require("project");
+var Project = artifacts.require("Project");
+var ProjectCatalog = artifacts.require("ProjectCatalog");
 var DonationWallet = artifacts.require("DonationWallet");
 var AliceToken = artifacts.require("AliceToken");
 
@@ -12,12 +13,19 @@ const should = require('chai')
 contract('DonationWallet', function(accounts) {
 	var token;
 	var wallet;
-	var project;
+	var projectCatalog;
 	var donor = accounts[0];
+
+	before("register project in catalog", async function () {
+		var project = await Project.deployed();
+		projectCatalog = await ProjectCatalog.new();
+		projectCatalog.addProject("PROJECT", project.address);
+		wallet = await DonationWallet.new(projectCatalog.address);
+	});
 
 	it("should deposit tokens to donation wallet", async function() {
 		token = await AliceToken.deployed();
-	  wallet = await DonationWallet.new();
+
 	  await token.mint(wallet.address, 100);
 
 	  (await wallet.balance(token.address)).should.be.bignumber.equal(100);
@@ -31,9 +39,10 @@ contract('DonationWallet', function(accounts) {
 	});
 
 	it("should donate from wallet", async function() {
-		project = await Project.deployed();
-		await wallet.donate(token.address, 50, project.address);
+		await wallet.donate(token.address, 50, "PROJECT");
 
+		var projectAddress = await projectCatalog.getProjectAddress("PROJECT");
+		var project = Project.at(projectAddress);
 		(await wallet.balance(token.address)).should.be.bignumber.equal(0);
 		(await project.getBalance(donor)).should.be.bignumber.equal(50);
 	});
