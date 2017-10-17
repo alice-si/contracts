@@ -8,7 +8,7 @@ const should = require('chai')
 	.use(require('chai-bignumber')(BigNumber))
 	.should()
 
-contract('ProjectCatalog', function(accounts) {
+contract('Escapable', function(accounts) {
 	var escapeController = accounts[1];
 	var escapeTarget = accounts[2];
 	var newController = accounts[3];
