@@ -14,7 +14,7 @@ contract ImpactRegistry is Ownable {
   }
 
   modifier onlyLinker {
-    require(msg.sender != address(linker));
+    require(msg.sender == address(linker));
     _;
   }
 
@@ -78,9 +78,7 @@ contract ImpactRegistry is Ownable {
     accountBalances[_account] = 0;
   }
 
-
-
-  function registerImpact(string _impactId, uint _accountIndex, uint _linkedValue) onlyLinker {
+  function registerImpact(string _impactId, uint _accountIndex, uint _linkedValue) onlyLinker  {
     Impact storage impact = impacts[_impactId];
     address account = this.getAccount(_accountIndex);
     if (impact.values[account] == 0) {
