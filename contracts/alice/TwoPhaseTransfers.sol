@@ -13,7 +13,7 @@ contract TwoPhaseTransfers {
     mapping(address => bool) proposers;
     mapping(address => bool) validators;
 
-    uint idGenerator;
+    uint nonce = 1;
 
     struct TransferProposal {
         ERC20 token;
@@ -56,7 +56,7 @@ contract TwoPhaseTransfers {
     }
 
     function proposeTransfer(ERC20 token, address to, uint value) onlyProposer returns(uint) {
-        uint id = idGenerator++;
+        uint id = nonce++;
         transferProposals[id] = TransferProposal(token, to, value);
         TransferProposed(id, token, to, value);
         return id;
