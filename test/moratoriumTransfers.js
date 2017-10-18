@@ -8,6 +8,29 @@ const should = require('chai')
 	.use(require('chai-bignumber')(BigNumber))
 	.should();
 
+const increaseTime = function(duration) {
+	const id = Date.now();
+
+	return new Promise((resolve, reject) => {
+		web3.currentProvider.sendAsync({
+			jsonrpc: '2.0',
+			method: 'evm_increaseTime',
+			params: [duration],
+			id: id,
+		}, err1 => {
+			if (err1) return reject(err1)
+
+			web3.currentProvider.sendAsync({
+				jsonrpc: '2.0',
+				method: 'evm_mine',
+				id: id+1,
+			}, (err2, res) => {
+				return err2 ? reject(err2) : resolve(res)
+			})
+		})
+	})
+}
+
 contract('MoratoriumTransfers', function(accounts) {
 	const MORATORIUM_PERIOD = 1000;
 	var moratoriumTransfers;
@@ -23,6 +46,25 @@ contract('MoratoriumTransfers', function(accounts) {
 
 	it("should correctly deposit tokens", async function() {
 		(await token.balanceOf(moratoriumTransfers.address)).should.be.bignumber.equal(100);
+	});
+
+	it("should create transfer proposal", async function() {
+		const {logs} = await moratoriumTransfers.proposeTransfer(token.address, target, 100);
+		const event = logs.find(e => e.event === 'TransferProposed');
+		proposalId = event.args.id;
+		console.log(proposalId);
+	});
+
+	it("should fail to confirm the transfer before moratorium period", async function() {
+		await moratoriumTransfers.confirmTransfer(proposalId).should.be.rejectedWith('invalid opcode');
+	});
+
+	it("should confirm the transfer after moratorium", async function() {
+		await increaseTime(MORATORIUM_PERIOD + 1);
+		await moratoriumTransfers.confirmTransfer(proposalId);
+
+		(await token.balanceOf(moratoriumTransfers.address)).should.be.bignumber.equal(0);
+		(await token.balanceOf(target)).should.be.bignumber.equal(100);
 	});
 
 });
