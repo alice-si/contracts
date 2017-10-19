@@ -52,7 +52,6 @@ contract('MoratoriumTransfers', function(accounts) {
 		const {logs} = await moratoriumTransfers.proposeTransfer(token.address, target, 100);
 		const event = logs.find(e => e.event === 'TransferProposed');
 		proposalId = event.args.id;
-		console.log(proposalId);
 	});
 
 	it("should fail to confirm the transfer before moratorium period", async function() {
