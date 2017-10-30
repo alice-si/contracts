@@ -11,7 +11,9 @@
     "test": "scripts/test.sh",
     "console": "truffle console",
     "coverage": "scripts/coverage.sh",
-    "coveralls": "scripts/coveralls.sh"
+    "coveralls": "scripts/coveralls.sh",
+    "build": "webpack",
+    "dev": "webpack-dev-server"
   },
   "license": "MIT",
   "bugs": {
@@ -19,10 +21,29 @@
   },
   "homepage": "https://github.com/jakub-wojciechowski/alice-contracts",
   "devDependencies": {
-    "ethereumjs-testrpc": "^3.0.2",
-    "truffle": "^3.3.2",
-    "truffle-core": "^3.3.1",
-    "truffle-default-builder": "^2.0.0"
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^6.1.2",
+    "babel-loader": "^6.4.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "copy-webpack-plugin": "^4.2.0",
+    "css-loader": "^0.26.4",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-babel": "^4.1.2",
+    "eslint-plugin-mocha": "^4.11.0",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^2.3.1",
+    "html-webpack-plugin": "^2.30.1",
+    "json-loader": "^0.5.7",
+    "style-loader": "^0.13.2",
+    "truffle-contract": "^1.1.11",
+    "web3": "^0.18.4",
+    "webpack": "^2.7.0",
+    "webpack-dev-server": "^2.9.3"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",

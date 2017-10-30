@@ -1,3 +1,16 @@
+// Import the page's CSS. Webpack will know what to do with it.
+import "../stylesheets/app.css";
+
+// Import libraries we need.
+import { default as Web3} from 'web3';
+import { default as contract } from 'truffle-contract'
+
+// Import our contract artifacts and turn them into usable abstractions.
+import alice_token_artifacts from '../../build/contracts/AliceToken.json'
+
+// MetaCoin is our usable abstraction, which we'll use through the code below.
+var AliceToken = contract(alice_token_artifacts);
+
 var accounts;
 var aliceAccount;
 var donor1Account;
@@ -14,7 +27,7 @@ var balances = {};
 function refreshBalance() {
   showBalance(donor1Account,  "balance_donor_1");
   showBalance(donor2Account,  "balance_donor_2");
-  showBalance(CharityContract.address, "balance_charity");
+  //showBalance(CharityContract.address, "balance_charity");
   showBalance(beneficiaryAccount, "balance_beneficiary");
 }
 
@@ -123,16 +136,12 @@ function setupWeb3Filter() {
 }
 
 window.onload = function() {
+	window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+	AliceToken.setProvider(web3.currentProvider);
+
   AliceToken.deployed()
     .then(function (instance) {
       TokenContract = instance;
-      console.log(TokenContract);
-      return Charity.deployed();
-  }).then(function(instance) {
-      CharityContract = instance;
-      return ImpactRegistry.deployed();
-  }).then(function(instance) {
-      ImpactContract = instance;
       web3.eth.getAccounts(function(err, accs) {
       if (err != null) {
         alert("There was an error fetching your accounts.");

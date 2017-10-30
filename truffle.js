@@ -1,25 +1,12 @@
-require('babel-register');
-require('babel-polyfill');
-
-var DefaultBuilder = require("truffle-default-builder");
+// Allows us to use ES6 in our migrations and tests.
+require('babel-register')
 
 module.exports = {
-  build: new DefaultBuilder({
-    "index.html": "index.html",
-    "app.js": [
-      "javascripts/app.js"
-    ],
-    "app.css": [
-      "stylesheets/app.css",
-      "stylesheets/AdminLTE.min.css"
-    ]
-  }),
-  networks: {
-    development: {
-      network_id: "*",
-      gas: 4000000,
-      host: 'localhost',
-      port: '8545'
-    }
-  }
-};
+	networks: {
+		development: {
+			host: 'localhost',
+			port: 8545,
+			network_id: '*' // Match any network id
+		}
+	}
+}
