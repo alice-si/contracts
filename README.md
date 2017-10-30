@@ -61,7 +61,7 @@ We created a demo dApp so you can interact and test the smart contracts in a vis
 
 ... and then launch a demo server:
 
-    truffle serve
+    npm run dev
 
 This demo dApp should be available at: http://localhost:8080/ and look like this:
 ![screenshot](https://s3.eu-west-2.amazonaws.com/alice-res/alice-dApp.png)
