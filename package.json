@@ -40,7 +40,7 @@
     "html-webpack-plugin": "^2.30.1",
     "json-loader": "^0.5.7",
     "style-loader": "^0.13.2",
-    "truffle-contract": "^1.1.11",
+    "truffle": "^4.0.3",
     "web3": "^0.18.4",
     "webpack": "^2.7.0",
     "webpack-dev-server": "^2.9.3"

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
@@ -41,12 +41,12 @@ contract ImpactRegistry is Ownable {
   mapping (string => Impact) impacts;
 
 
-  function ImpactRegistry(address _masterContract, uint _unit) {
+  function ImpactRegistry(address _masterContract, uint _unit) public {
     masterContract = _masterContract;
     unit = _unit;
   }
 
-  function registerDonation(address _from, uint _value) onlyMaster {
+  function registerDonation(address _from, uint _value) public onlyMaster {
     if (accountBalances[_from] == 0) {
       accountIndex.push(_from);
     }
@@ -54,31 +54,31 @@ contract ImpactRegistry is Ownable {
     accountBalances[_from] = accountBalances[_from].add(_value);
   }
 
-  function setUnit(uint _value) onlyOwner {
+  function setUnit(uint _value) public onlyOwner {
     unit = _value;
   }
 
-  function setMasterContract(address _contractAddress) onlyOwner {
+  function setMasterContract(address _contractAddress) public onlyOwner {
       masterContract = _contractAddress;
   }
 
-  function setLinker(ImpactLinker _linker) onlyOwner {
+  function setLinker(ImpactLinker _linker) public onlyOwner {
     linker = _linker;
   }
 
-  function registerOutcome(string _name, uint _value) onlyMaster{
+  function registerOutcome(string _name, uint _value) external onlyMaster {
     impacts[_name] = Impact(_value, 0, 0);
   }
 
-  function linkImpact(string _name) onlyOwner {
+  function linkImpact(string _name) external onlyOwner {
     linker.linkImpact(_name);
   }
 
-  function payBack(address _account) onlyMaster{
+  function payBack(address _account) public onlyMaster {
     accountBalances[_account] = 0;
   }
 
-  function registerImpact(string _impactId, uint _accountIndex, uint _linkedValue) onlyLinker  {
+  function registerImpact(string _impactId, uint _accountIndex, uint _linkedValue) external onlyLinker  {
     Impact storage impact = impacts[_impactId];
     address account = this.getAccount(_accountIndex);
     if (impact.values[account] == 0) {
@@ -105,35 +105,35 @@ contract ImpactRegistry is Ownable {
   }
 
 
-  function getAccountsCount() constant returns(uint) {
+  function getAccountsCount() public view returns(uint) {
     return accountIndex.length;
   }
 
-  function getAccount(uint _index) constant returns(address) {
+  function getAccount(uint _index) public view returns(address) {
     return accountIndex[_index];
   }
 
-  function getBalance(address _donorAddress) constant returns(uint) {
+  function getBalance(address _donorAddress) public view returns(uint) {
     return accountBalances[_donorAddress];
   }
 
-  function getImpactCount(string outcome) constant returns(uint) {
+  function getImpactCount(string outcome) public view returns(uint) {
     return impacts[outcome].count;
   }
 
-  function getImpactLinked(string outcome) constant returns(uint) {
+  function getImpactLinked(string outcome) public view returns(uint) {
     return impacts[outcome].linked;
   }
 
-  function getImpactTotalValue(string outcome) constant returns(uint) {
+  function getImpactTotalValue(string outcome) public view returns(uint) {
     return impacts[outcome].value;
   }
 
-  function getImpactDonor(string outcome, uint index) constant returns(address) {
+  function getImpactDonor(string outcome, uint index) public view returns(address) {
     return impacts[outcome].addresses[index];
   }
 
-  function getImpactValue(string outcome, address addr) constant returns(uint) {
+  function getImpactValue(string outcome, address addr) public view returns(uint) {
     return impacts[outcome].values[addr];
   }
 
