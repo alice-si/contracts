@@ -27,7 +27,7 @@ contract('TwoPhaseTransfers', function(accounts) {
 	});
 
 	it("should prevent proposing transfer from unauthorized account", async function() {
-		twoPhaseTransfers.proposeTransfer(token.address, target, 100, {from: validator}).should.be.rejectedWith('invalid opcode');
+		twoPhaseTransfers.proposeTransfer(token.address, target, 100, {from: validator}).should.be.rejectedWith('VM Exception while processing transaction: revert');
 	});
 
 	it("should allow proposing transfer from authorized account", async function() {
@@ -41,7 +41,7 @@ contract('TwoPhaseTransfers', function(accounts) {
 	});
 
 	it("should prevent confirming transfer from unauthorized account", async function() {
-		twoPhaseTransfers.confirmTransfer(proposalId, {from: proposer}).should.be.rejectedWith('invalid opcode');
+		twoPhaseTransfers.confirmTransfer(proposalId, {from: proposer}).should.be.rejectedWith('VM Exception while processing transaction: revert');
 	});
 
 	it("should allow confirming transfer from authorized account", async function() {

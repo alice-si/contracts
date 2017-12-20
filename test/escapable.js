@@ -26,7 +26,7 @@ contract('Escapable', function(accounts) {
 	});
 
 	it("should prevent escaping from non controller", async function() {
-		escapable.escape(token.address, {from: newController}).should.be.rejectedWith('invalid opcode');
+		escapable.escape(token.address, {from: newController}).should.be.rejectedWith('VM Exception while processing transaction: revert');
 	});
 
 	it("should allow changing controller", async function() {

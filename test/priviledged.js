@@ -23,7 +23,7 @@ contract('Singe impactRegistry donation', function(accounts) {
 
 	it("shouldn't allow creating the same privilege", async function() {
 		await privileged.createPrivilege("owner", owner, owner);
-		await privileged.createPrivilege("owner", owner, owner).should.be.rejectedWith('invalid opcode');
+		await privileged.createPrivilege("owner", owner, owner).should.be.rejectedWith('VM Exception while processing transaction: revert');
 	});
 
 	it("should transfer ownership as controller", async function() {
@@ -33,7 +33,7 @@ contract('Singe impactRegistry donation', function(accounts) {
 
 	it("shouldn't allow transferring ownership as owner", async function() {
 		await privileged.createPrivilege("owner", owner, controller);
-		await privileged.transferPrivilege("owner", owner2, {from: owner}).should.be.rejectedWith('invalid opcode');
+		await privileged.transferPrivilege("owner", owner2, {from: owner}).should.be.rejectedWith('VM Exception while processing transaction: revert');
 	});
 
 	it("should revoke and recreate a privilege", async function() {
@@ -44,7 +44,7 @@ contract('Singe impactRegistry donation', function(accounts) {
 
 	it("shouldn't allow revoking if it's not a controller", async function() {
 		await privileged.createPrivilege("owner", owner, controller);
-		await privileged.revokePrivilege("owner", {from: owner}).should.be.rejectedWith('invalid opcode');
+		await privileged.revokePrivilege("owner", {from: owner}).should.be.rejectedWith('VM Exception while processing transaction: revert');
 	});
 
 

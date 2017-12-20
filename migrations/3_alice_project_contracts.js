@@ -15,6 +15,7 @@ module.exports = async function(deployer, network, accounts) {
   //Setup Impact Registry
   await deployer.deploy(ImpactRegistry, Project.address, 1000);
 	let impactRegistry = await ImpactRegistry.deployed();
+	console.log("Impact Registry deployed to: " + ImpactRegistry.address);
 	await impactRegistry.setUnit(unit);
 
 	//Configure project

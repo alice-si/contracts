@@ -13,7 +13,7 @@ contract('Singe impactRegistry donation', function(accounts) {
   var registry, linker;
 
   it("should attach master contract", async function() {
-      registry = await ImpactRegistry.deployed();
+      registry = await ImpactRegistry.new(Project.address, 1000);
       linker = await Linker.new(registry.address, 10);
       await registry.setLinker(linker.address);
 

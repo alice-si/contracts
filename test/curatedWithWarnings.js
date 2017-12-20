@@ -34,7 +34,7 @@ contract('CuratedWithWarnings', function(accounts) {
 	});
 
 	it("should fail to block transfer for non whistleBlowers", async function() {
-		await curatedWithWarnings.blockTransfer(proposalId).should.be.rejectedWith('invalid opcode');
+		await curatedWithWarnings.blockTransfer(proposalId).should.be.rejectedWith('VM Exception while processing transaction: revert');
 	});
 
 	it("should allow blocking transfer for whistleBlowers", async function() {
@@ -42,7 +42,7 @@ contract('CuratedWithWarnings', function(accounts) {
 	});
 
 	it("shouldn't allow resuming transfer for whistleBlowers", async function() {
-		await curatedWithWarnings.resumeTransfer(proposalId, {from: whistleblower}).should.be.rejectedWith('invalid opcode');
+		await curatedWithWarnings.resumeTransfer(proposalId, {from: whistleblower}).should.be.rejectedWith('VM Exception while processing transaction: revert');
 	});
 
 	it("should allow resuming transfer for curator", async function() {
@@ -50,7 +50,7 @@ contract('CuratedWithWarnings', function(accounts) {
 	});
 
 	it("shouldn't allow blocking again the same transfer", async function() {
-		await curatedWithWarnings.blockTransfer(proposalId, {from: whistleblower}).should.be.rejectedWith('invalid opcode');
+		await curatedWithWarnings.blockTransfer(proposalId, {from: whistleblower}).should.be.rejectedWith('VM Exception while processing transaction: revert');
 	});
 
 	it("should confirm resumed transfer", async function() {

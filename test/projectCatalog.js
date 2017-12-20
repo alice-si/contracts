@@ -25,7 +25,7 @@ contract('ProjectCatalog', function(accounts) {
 	});
 
 	it("should prevent adding the same project again", async function() {
-		await projectCatalog.addProject("PROJECT", project.address).should.be.rejectedWith('invalid opcode');
+		await projectCatalog.addProject("PROJECT", project.address).should.be.rejectedWith('VM Exception while processing transaction: revert');
 	});
 
 });
