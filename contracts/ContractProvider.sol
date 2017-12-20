@@ -1,5 +1,5 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.18;
 
 contract ContractProvider {
-    function contracts(bytes32 contractName) returns (address addr){}
+    function contracts(bytes32 contractName) public returns (address addr);
 }
