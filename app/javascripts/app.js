@@ -61,14 +61,17 @@ function showImpact(name) {
   });
 }
 
-function donate(account, value) {
-  TokenContract.mint(CharityContract.address, value, {from: aliceAccount, gas: 1000000}).then(function(tx) {
-    return CharityContract.notify(account, value, {from: aliceAccount, gas: 1000000})
-  .then(function () {
-      refreshBalance();
-      return null;
-    });
-  })
+window.donate = function(account, value) {
+  // TokenContract.mint(CharityContract.address, value, {from: aliceAccount, gas: 1000000}).then(function(tx) {
+  //   return CharityContract.notify(account, value, {from: aliceAccount, gas: 1000000})
+  // .then(function () {
+  //     refreshBalance();
+  //     return null;
+  //   });
+  // })
+	TokenContract.mint(account, value, {from: aliceAccount, gas: 1000000}).then(function(tx) {
+		 refreshBalance();
+		});
 }
 
 function reuseUnspent(account) {
@@ -123,6 +126,22 @@ function mapAccounts(accounts) {
   beneficiaryAccount = accounts[2];
   donor1Account = accounts[3];
   donor2Account = accounts[4];
+
+  window.donor1Account = donor1Account;
+  window.donor2Account = donor2Account;
+}
+
+function printLog(text) {
+	var logBox = document.getElementById("log");
+	logBox.innerHTML += text + "<br/>";
+}
+
+function printTx(tx) {
+	printLog("Transaction hash: " + tx);
+}
+
+function printContract(contract) {
+  printLog("Contract " + " deployed to: " + contract.address);
 }
 
 function setupWeb3Filter() {
@@ -130,19 +149,27 @@ function setupWeb3Filter() {
 
   filter.watch(function (error, log) {
     console.log(log);
-    var logBox = document.getElementById("log");
-    logBox.innerHTML += "Transaction hash: " + log.transactionHash + "<br/>";
+    printTx(log.transactionHash);
   });
+}
+
+function deployToken() {
+	AliceToken.setProvider(web3.currentProvider);
+
+  AliceToken.new({from: aliceAccount, gas: 2000000}).then(function(instance) {
+    console.log("Token deployed to: " + instance.address);
+		TokenContract = instance;
+		printContract(instance);
+		console.log(instance);
+		refreshBalance();
+  })
 }
 
 window.onload = function() {
 	window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-	AliceToken.setProvider(web3.currentProvider);
 
-  AliceToken.deployed()
-    .then(function (instance) {
-      TokenContract = instance;
-      web3.eth.getAccounts(function(err, accs) {
+
+	web3.eth.getAccounts(function(err, accs) {
       if (err != null) {
         alert("There was an error fetching your accounts.");
         return;
@@ -154,10 +181,9 @@ window.onload = function() {
       }
 
       mapAccounts(accs);
-      refreshBalance();
+		  deployToken();
+
     });
-  });
+	setupWeb3Filter();
 
-  setupWeb3Filter();
-
-}
+};
