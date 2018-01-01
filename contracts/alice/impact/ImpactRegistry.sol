@@ -27,8 +27,6 @@ contract ImpactRegistry is Ownable {
   /* Additional structure to help to iterate over donations */
   address[] accountIndex;
 
-  uint public unit;
-
   struct Impact {
     uint value;
     uint linked;
@@ -41,9 +39,8 @@ contract ImpactRegistry is Ownable {
   mapping (string => Impact) impacts;
 
 
-  function ImpactRegistry(address _masterContract, uint _unit) public {
+  function ImpactRegistry(address _masterContract) public {
     masterContract = _masterContract;
-    unit = _unit;
   }
 
   function registerDonation(address _from, uint _value) public onlyMaster {
@@ -52,10 +49,6 @@ contract ImpactRegistry is Ownable {
     }
 
     accountBalances[_from] = accountBalances[_from].add(_value);
-  }
-
-  function setUnit(uint _value) public onlyOwner {
-    unit = _value;
   }
 
   function setMasterContract(address _contractAddress) public onlyOwner {

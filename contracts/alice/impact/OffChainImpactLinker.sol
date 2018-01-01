@@ -6,15 +6,19 @@ import './ImpactRegistry.sol';
 import './ImpactLinker.sol';
 
 
-contract OffChainImpactLinker is Ownable, ImpactLinker {
-    using SafeMath for uint256;
+contract OffChainImpactLinker is ImpactLinker {
 
-   function OffChainImpactLinker(ImpactRegistry _impactRegistry)
-     ImpactLinker(_impactRegistry) { }
+    function OffChainImpactLinker(ImpactRegistry _impactRegistry)
+    ImpactLinker(_impactRegistry) {
+    }
 
    function linkDirectly(string _impactId, uint _accountIndex, uint _impactVal) external onlyOwner {
      registry.registerImpact(_impactId, _accountIndex, _impactVal);
    }
+
+    function linkImpact(string impactId) external {
+        assert(false);
+    }
 
 
 }
