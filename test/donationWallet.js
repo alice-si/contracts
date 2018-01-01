@@ -2,6 +2,7 @@ var Project = artifacts.require("Project");
 var ProjectCatalog = artifacts.require("ProjectCatalog");
 var DonationWallet = artifacts.require("DonationWallet");
 var AliceToken = artifacts.require("AliceToken");
+var ImpactRegistry = artifacts.require("ImpactRegistry");
 
 const BigNumber = web3.BigNumber;
 
@@ -17,9 +18,11 @@ contract('DonationWallet', function(accounts) {
 	var donor = accounts[0];
 
 	before("register project in catalog", async function () {
-		var project = await Project.deployed();
+		var project = await Project.new("Test project");
+		var registry = await ImpactRegistry.new(project.address, 100);
+		await project.setImpactRegistry(registry.address);
 		projectCatalog = await ProjectCatalog.new();
-		projectCatalog.addProject("PROJECT", project.address);
+		await projectCatalog.addProject("PROJECT", project.address);
 		wallet = await DonationWallet.new(projectCatalog.address);
 	});
 
@@ -36,15 +39,16 @@ contract('DonationWallet', function(accounts) {
 
 		(await wallet.balance(token.address)).should.be.bignumber.equal(50);
 		(await token.balanceOf(donor)).should.be.bignumber.equal(50);
+		(await token.balanceOf(wallet.address)).should.be.bignumber.equal(50);
 	});
 
 	it("should donate from wallet", async function() {
-		await wallet.donate(token.address, 50, "PROJECT");
+		await wallet.donate(token.address, 10, "PROJECT");
 
 		var projectAddress = await projectCatalog.getProjectAddress("PROJECT");
 		var project = Project.at(projectAddress);
-		(await wallet.balance(token.address)).should.be.bignumber.equal(0);
-		(await project.getBalance(donor)).should.be.bignumber.equal(50);
+		(await wallet.balance(token.address)).should.be.bignumber.equal(40);
+		(await project.getBalance(wallet.address)).should.be.bignumber.equal(10);
 	});
 
 

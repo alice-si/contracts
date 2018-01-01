@@ -4,7 +4,7 @@ import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import 'zeppelin-solidity/contracts/token/ERC20.sol';
 
-import "./ImpactRegistry.sol";
+import "./impact/ImpactRegistry.sol";
 import "../ContractProvider.sol";
 
 contract Project is Ownable {
@@ -60,11 +60,9 @@ contract Project is Ownable {
         DonationEvent(_from, _amount);
     }
 
-    function donateFromWallet(uint _amount) {
-        address tokenAddress = ContractProvider(CONTRACT_PROVIDER_ADDRESS).contracts("digitalGBP");
-        ERC20(tokenAddress).transferFrom(msg.sender, address(this), _amount);
-        address owner = Ownable(msg.sender).owner();
-        registerDonation(owner, _amount);
+    function donateFromWallet(ERC20 _token, uint _amount) {
+        _token.transferFrom(msg.sender, address(this), _amount);
+        registerDonation(msg.sender, _amount);
     }
 
     function fund(uint _value) onlyOwner {
