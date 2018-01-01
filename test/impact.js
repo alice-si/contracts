@@ -1,5 +1,6 @@
 var ImpactRegistry = artifacts.require("ImpactRegistry");
 var Linker = artifacts.require("FlexibleImpactLinker");
+var Project = artifacts.require("Project");
 
 const BigNumber = web3.BigNumber
 
@@ -8,7 +9,7 @@ const should = require('chai')
     .use(require('chai-bignumber')(BigNumber))
     .should()
 
-contract('Singe impactRegistry donation', function(accounts) {
+contract('Single impactRegistry donation', function(accounts) {
   var donor1 = accounts[1];
   var registry, linker;
 
@@ -63,7 +64,7 @@ contract('Donation below unit', function(accounts) {
   var registry, linker;
 
   it("should configure impact registry", async function() {
-      registry = await ImpactRegistry.deployed();
+		  registry = await ImpactRegistry.new(Project.address, 1000);
       linker = await Linker.new(registry.address, 10);
       await registry.setLinker(linker.address);
 
@@ -115,7 +116,7 @@ contract('Donation above unit', function(accounts) {
   var registry, linker;
 
   it("should configure impact registry", async function() {
-      registry = await ImpactRegistry.deployed();
+		  registry = await ImpactRegistry.new(Project.address, 1000);
       linker = await Linker.new(registry.address, 10);
       await registry.setLinker(linker.address);
 
@@ -180,7 +181,7 @@ contract('Two donations (15+20)', function(accounts) {
   var registry, linker;
 
   it("should configure impact registry", async function() {
-    registry = await ImpactRegistry.deployed();
+		registry = await ImpactRegistry.new(Project.address, 1000);
     linker = await Linker.new(registry.address, 10);
     await registry.setLinker(linker.address);
 
@@ -299,7 +300,7 @@ contract('Two donations (25+25)', function(accounts) {
 	var registry, linker;
 
 	it("should configure impact registry", async function() {
-		registry = await ImpactRegistry.deployed();
+		registry = await ImpactRegistry.new(Project.address, 1000);
 		linker = await Linker.new(registry.address, 10);
 		await registry.setLinker(linker.address);
 
