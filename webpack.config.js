@@ -27,7 +27,7 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader',
         query: {
-          presets: ['es2015'],
+          presets: ['2017'],
           plugins: ['transform-runtime']
         }
       }

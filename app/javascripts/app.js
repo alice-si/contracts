@@ -153,16 +153,12 @@ function setupWeb3Filter() {
   });
 }
 
-function deployToken() {
+async function deployToken() {
 	AliceToken.setProvider(web3.currentProvider);
 
-  AliceToken.new({from: aliceAccount, gas: 2000000}).then(function(instance) {
-    console.log("Token deployed to: " + instance.address);
-		TokenContract = instance;
-		printContract(instance);
-		console.log(instance);
-		refreshBalance();
-  })
+  TokenContract = await AliceToken.new({from: aliceAccount, gas: 2000000});
+  printContract(TokenContract);
+	refreshBalance();
 }
 
 window.onload = function() {
