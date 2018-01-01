@@ -13,7 +13,7 @@ module.exports = async function(deployer, network, accounts) {
   let project = await Project.deployed();
 
   //Setup Impact Registry
-  await deployer.deploy(ImpactRegistry, Project.address, 1000);
+  await deployer.deploy(ImpactRegistry, Project.address);
 	let impactRegistry = await ImpactRegistry.deployed();
 	console.log("Impact Registry deployed to: " + ImpactRegistry.address);
 	await impactRegistry.setUnit(unit);

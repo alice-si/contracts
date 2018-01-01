@@ -19,7 +19,7 @@ contract('DonationWallet', function(accounts) {
 
 	before("register project in catalog", async function () {
 		var project = await Project.new("Test project");
-		var registry = await ImpactRegistry.new(project.address, 100);
+		var registry = await ImpactRegistry.new(project.address);
 		await project.setImpactRegistry(registry.address);
 		projectCatalog = await ProjectCatalog.new();
 		await projectCatalog.addProject("PROJECT", project.address);
