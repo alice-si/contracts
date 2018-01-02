@@ -30,27 +30,27 @@ contract Project is Ownable {
     event OutcomeEvent(string id, uint value);
     event DonationEvent(address indexed from, uint value);
 
-    function Project(string _name) {
+    function Project(string _name) public {
         name = _name;
     }
 
-    function setJudge(address _judgeAddress) onlyOwner {
+    function setJudge(address _judgeAddress) public onlyOwner {
         judgeAddress = _judgeAddress;
     }
 
-    function setBeneficiary(address _beneficiaryAddress) onlyOwner {
+    function setBeneficiary(address _beneficiaryAddress) public onlyOwner {
         beneficiaryAddress = _beneficiaryAddress;
     }
 
-    function setImpactRegistry(address impactRegistryAddress) onlyOwner {
+    function setImpactRegistry(address impactRegistryAddress) public onlyOwner {
         IMPACT_REGISTRY_ADDRESS = impactRegistryAddress;
     }
 
-    function setContractProvider(address _contractProvider) onlyOwner {
+    function setContractProvider(address _contractProvider) public onlyOwner {
         CONTRACT_PROVIDER_ADDRESS = _contractProvider;
     }
 
-    function notify(address _from, uint _amount) onlyOwner {
+    function notify(address _from, uint _amount) public onlyOwner {
         registerDonation(_from, _amount);
     }
 
@@ -60,16 +60,16 @@ contract Project is Ownable {
         DonationEvent(_from, _amount);
     }
 
-    function donateFromWallet(ERC20 _token, uint _amount) {
+    function donateFromWallet(ERC20 _token, uint _amount) public {
         _token.transferFrom(msg.sender, address(this), _amount);
         registerDonation(msg.sender, _amount);
     }
 
-    function fund(uint _value) onlyOwner {
+    function fund(uint _value) public onlyOwner {
         total = total.add(_value);
     }
 
-    function unlockOutcome(ERC20 _token, string _name, uint _value) {
+    function unlockOutcome(ERC20 _token, string _name, uint _value) public {
         require (msg.sender == judgeAddress);
         require (_value <= total);
 
@@ -81,7 +81,7 @@ contract Project is Ownable {
         OutcomeEvent(_name, _value);
     }
 
-    function payBack(ERC20 _token, address account) onlyOwner {
+    function payBack(ERC20 _token, address account) public onlyOwner {
         uint balance = getBalance(account);
         if (balance > 0) {
             _token.transfer(account, balance);
@@ -90,12 +90,12 @@ contract Project is Ownable {
         }
     }
 
-    function getBalance(address donor) constant returns(uint) {
+    function getBalance(address donor) public view returns(uint) {
         return ImpactRegistry(IMPACT_REGISTRY_ADDRESS).getBalance(donor);
     }
 
     /* Extra security measure to save funds in case of critical error or attack */
-    function escape(ERC20 _token, address escapeAddress) onlyOwner {
+    function escape(ERC20 _token, address escapeAddress) public onlyOwner {
         _token.transfer(escapeAddress, total);
         total = 0;
     }
