@@ -30,7 +30,7 @@ contract Project is Ownable {
     event OutcomeEvent(string id, uint value);
     event DonationEvent(address indexed from, uint value);
 
-    function Charity(string _name) {
+    function Project(string _name) {
         name = _name;
     }
 
