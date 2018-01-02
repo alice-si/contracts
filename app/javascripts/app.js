@@ -8,10 +8,16 @@ import { default as contract } from 'truffle-contract'
 // Import our contract artifacts and turn them into usable abstractions.
 import alice_token_artifacts from '../../build/contracts/AliceToken.json';
 import wallet_artifacts from '../../build/contracts/DonationWallet.json';
+import project_artifacts from '../../build/contracts/Project.json';
+import catalog_artifacts from '../../build/contracts/ProjectCatalog.json';
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
 var AliceToken = contract(alice_token_artifacts);
 var Wallet = contract(wallet_artifacts);
+var Project = contract(project_artifacts);
+var Catalog = contract(catalog_artifacts);
+
+const PROJECT_NAME = "DEMO_PROJECT";
 
 var accounts;
 var aliceAccount;
@@ -23,6 +29,8 @@ var judgeAccount;
 var TokenContract;
 var CharityContract;
 var ImpactContract;
+var CatalogContract;
+var ProjectContract
 
 var balances = {};
 var wallets = {};
@@ -30,7 +38,7 @@ var wallets = {};
 function refreshBalance() {
   showBalance(wallets[donor1Account].address,  "balance_donor_1");
   showBalance(wallets[donor2Account].address,  "balance_donor_2");
-  //showBalance(CharityContract.address, "balance_charity");
+  showBalance(ProjectContract.address, "balance_charity");
   showBalance(beneficiaryAccount, "balance_beneficiary");
 }
 
@@ -162,6 +170,19 @@ async function deployToken() {
   printContract(TokenContract);
 }
 
+async function deployProject() {
+	Project.setProvider(web3.currentProvider);
+	Catalog.setProvider(web3.currentProvider);
+
+	ProjectContract = await Project.new(PROJECT_NAME, {from: aliceAccount, gas: 2000000});
+	printContract(ProjectContract);
+
+	CatalogContract = await Catalog.new({from: aliceAccount, gas: 2000000});
+	printContract(CatalogContract);
+
+	await CatalogContract.addProject(PROJECT_NAME, ProjectContract.address, {from: aliceAccount, gas: 2000000});
+}
+
 async function deployWallet(donor) {
 	Wallet.setProvider(web3.currentProvider);
 
@@ -171,6 +192,7 @@ async function deployWallet(donor) {
 
 async function deploy() {
   await deployToken();
+  await deployProject();
   await deployWallet(donor1Account);
   await deployWallet(donor2Account);
 	refreshBalance();
@@ -191,11 +213,14 @@ window.onload = function() {
         return;
       }
 
+		  setupWeb3Filter();
+
       mapAccounts(accs);
+
       deploy();
 
 
     });
-	setupWeb3Filter();
+
 
 };
