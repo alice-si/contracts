@@ -10,12 +10,14 @@ import alice_token_artifacts from '../../build/contracts/AliceToken.json';
 import wallet_artifacts from '../../build/contracts/DonationWallet.json';
 import project_artifacts from '../../build/contracts/Project.json';
 import catalog_artifacts from '../../build/contracts/ProjectCatalog.json';
+import impact_registry_artifacts from '../../build/contracts/ImpactRegistry.json';
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
 var AliceToken = contract(alice_token_artifacts);
 var Wallet = contract(wallet_artifacts);
 var Project = contract(project_artifacts);
 var Catalog = contract(catalog_artifacts);
+var ImpactRegistry = contract(impact_registry_artifacts);
 
 const PROJECT_NAME = "DEMO_PROJECT";
 
@@ -30,7 +32,7 @@ var TokenContract;
 var CharityContract;
 var ImpactContract;
 var CatalogContract;
-var ProjectContract
+var ProjectContract;
 
 var balances = {};
 var wallets = {};
@@ -78,9 +80,11 @@ window.deposit = function(account, value) {
 		});
 };
 
-window.donate = function(account, value) {
-	TokenContract.mint(wallets[account].address, value, {from: aliceAccount, gas: 1000000}).then(function(tx) {
-		refreshBalance();
+window.donate = async function(account, value) {
+	//var a = await wallets[account].getPC({from: aliceAccount, gas: 1000000});
+	//console.log(a);
+	wallets[account].donate(TokenContract.address, value, PROJECT_NAME, {from: aliceAccount, gas: 1000000}).then(function(tx) {
+	 	refreshBalance();
 	});
 };
 
@@ -173,9 +177,13 @@ async function deployToken() {
 async function deployProject() {
 	Project.setProvider(web3.currentProvider);
 	Catalog.setProvider(web3.currentProvider);
+	ImpactRegistry.setProvider(web3.currentProvider);
 
 	ProjectContract = await Project.new(PROJECT_NAME, {from: aliceAccount, gas: 2000000});
 	printContract(ProjectContract);
+
+	var registry = await ImpactRegistry.new(ProjectContract.address, {from: aliceAccount, gas: 2000000});
+	await ProjectContract.setImpactRegistry(registry.address, {from: aliceAccount, gas: 2000000});
 
 	CatalogContract = await Catalog.new({from: aliceAccount, gas: 2000000});
 	printContract(CatalogContract);
@@ -186,7 +194,7 @@ async function deployProject() {
 async function deployWallet(donor) {
 	Wallet.setProvider(web3.currentProvider);
 
-	wallets[donor] = await Wallet.new(aliceAccount, {from: aliceAccount, gas: 2000000});
+	wallets[donor] = await Wallet.new(CatalogContract.address, {from: aliceAccount, gas: 2000000});
 	printContract(wallets[donor]);
 }
 
