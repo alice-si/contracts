@@ -69,12 +69,11 @@ contract Project is Ownable {
         total = total.add(_value);
     }
 
-    function unlockOutcome(string _name, uint _value) {
+    function unlockOutcome(ERC20 _token, string _name, uint _value) {
         require (msg.sender == judgeAddress);
         require (_value <= total);
 
-        address tokenAddress = ContractProvider(CONTRACT_PROVIDER_ADDRESS).contracts("digitalGBP");
-        ERC20(tokenAddress).transfer(beneficiaryAddress, _value);
+        _token.transfer(beneficiaryAddress, _value);
         total = total.sub(_value);
 
         ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
@@ -82,11 +81,10 @@ contract Project is Ownable {
         OutcomeEvent(_name, _value);
     }
 
-    function payBack(address account) onlyOwner {
+    function payBack(ERC20 _token, address account) onlyOwner {
         uint balance = getBalance(account);
         if (balance > 0) {
-            address tokenAddress = ContractProvider(CONTRACT_PROVIDER_ADDRESS).contracts("digitalGBP");
-            ERC20(tokenAddress).transfer(account, balance);
+            _token.transfer(account, balance);
             total = total.sub(accountBalances[account]);
             ImpactRegistry(IMPACT_REGISTRY_ADDRESS).payBack(account);
         }
@@ -97,9 +95,8 @@ contract Project is Ownable {
     }
 
     /* Extra security measure to save funds in case of critical error or attack */
-    function escape(address escapeAddress) onlyOwner {
-        address tokenAddress = ContractProvider(CONTRACT_PROVIDER_ADDRESS).contracts("digitalGBP");
-        ERC20(tokenAddress).transfer(escapeAddress, total);
+    function escape(ERC20 _token, address escapeAddress) onlyOwner {
+        _token.transfer(escapeAddress, total);
         total = 0;
     }
 }

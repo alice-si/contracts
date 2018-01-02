@@ -1,5 +1,4 @@
 Project = artifacts.require("project");
-var SimpleContractRegistry = artifacts.require("SimpleContractRegistry");
 var AliceToken = artifacts.require("AliceToken");
 const BigNumber = web3.BigNumber;
 
@@ -16,14 +15,10 @@ contract('Escape', function(accounts) {
 
   it("should link project to contract provider", async function() {
 		project = await Project.new("Test project");
-    contractProvider = await SimpleContractRegistry.deployed();
-		await project.setContractProvider(contractProvider.address, {from: main});
-
   });
 
   it("should get token contract from registry", async function() {
-    var tokenAddress = await contractProvider.contracts.call('digitalGBP');
-    token = await AliceToken.at(tokenAddress);
+		token = await AliceToken.deployed();
     assert.notEqual(token, undefined);
   });
 
@@ -38,7 +33,7 @@ contract('Escape', function(accounts) {
   });
 
   it("should allow escape to secure address", async function () {
-    await project.escape(escapeAddress);
+    await project.escape(AliceToken.address, escapeAddress);
 
 		(await token.balanceOf(project.address)).should.be.bignumber.equal(0);
 		(await token.balanceOf(escapeAddress)).should.be.bignumber.equal(30);
