@@ -6,10 +6,12 @@ import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract'
 
 // Import our contract artifacts and turn them into usable abstractions.
-import alice_token_artifacts from '../../build/contracts/AliceToken.json'
+import alice_token_artifacts from '../../build/contracts/AliceToken.json';
+import wallet_artifacts from '../../build/contracts/DonationWallet.json';
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
 var AliceToken = contract(alice_token_artifacts);
+var Wallet = contract(wallet_artifacts);
 
 var accounts;
 var aliceAccount;
@@ -23,10 +25,11 @@ var CharityContract;
 var ImpactContract;
 
 var balances = {};
+var wallets = {};
 
 function refreshBalance() {
-  showBalance(donor1Account,  "balance_donor_1");
-  showBalance(donor2Account,  "balance_donor_2");
+  showBalance(wallets[donor1Account].address,  "balance_donor_1");
+  showBalance(wallets[donor2Account].address,  "balance_donor_2");
   //showBalance(CharityContract.address, "balance_charity");
   showBalance(beneficiaryAccount, "balance_beneficiary");
 }
@@ -61,18 +64,17 @@ function showImpact(name) {
   });
 }
 
-window.donate = function(account, value) {
-  // TokenContract.mint(CharityContract.address, value, {from: aliceAccount, gas: 1000000}).then(function(tx) {
-  //   return CharityContract.notify(account, value, {from: aliceAccount, gas: 1000000})
-  // .then(function () {
-  //     refreshBalance();
-  //     return null;
-  //   });
-  // })
-	TokenContract.mint(account, value, {from: aliceAccount, gas: 1000000}).then(function(tx) {
+window.deposit = function(account, value) {
+  TokenContract.mint(wallets[account].address, value, {from: aliceAccount, gas: 1000000}).then(function(tx) {
 		 refreshBalance();
 		});
-}
+};
+
+window.donate = function(account, value) {
+	TokenContract.mint(wallets[account].address, value, {from: aliceAccount, gas: 1000000}).then(function(tx) {
+		refreshBalance();
+	});
+};
 
 function reuseUnspent(account) {
   TokenContract.transfer(CharityContract.address, balances[account], {from: account, gas: 1000000})
@@ -158,6 +160,19 @@ async function deployToken() {
 
   TokenContract = await AliceToken.new({from: aliceAccount, gas: 2000000});
   printContract(TokenContract);
+}
+
+async function deployWallet(donor) {
+	Wallet.setProvider(web3.currentProvider);
+
+	wallets[donor] = await Wallet.new(aliceAccount, {from: aliceAccount, gas: 2000000});
+	printContract(wallets[donor]);
+}
+
+async function deploy() {
+  await deployToken();
+  await deployWallet(donor1Account);
+  await deployWallet(donor2Account);
 	refreshBalance();
 }
 
@@ -177,7 +192,8 @@ window.onload = function() {
       }
 
       mapAccounts(accs);
-		  deployToken();
+      deploy();
+
 
     });
 	setupWeb3Filter();
