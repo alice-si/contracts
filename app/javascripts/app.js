@@ -11,6 +11,7 @@ import wallet_artifacts from '../../build/contracts/DonationWallet.json';
 import project_artifacts from '../../build/contracts/Project.json';
 import catalog_artifacts from '../../build/contracts/ProjectCatalog.json';
 import impact_registry_artifacts from '../../build/contracts/ImpactRegistry.json';
+import linker_artifacts from '../../build/contracts/FlexibleImpactLinker.json';
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
 var AliceToken = contract(alice_token_artifacts);
@@ -18,6 +19,7 @@ var Wallet = contract(wallet_artifacts);
 var Project = contract(project_artifacts);
 var Catalog = contract(catalog_artifacts);
 var ImpactRegistry = contract(impact_registry_artifacts);
+var Linker = contract(linker_artifacts);
 
 const PROJECT_NAME = "DEMO_PROJECT";
 
@@ -86,6 +88,11 @@ window.donate = async function(account, value) {
 	});
 };
 
+window.donateAll = async function(account) {
+	var total = await TokenContract.balanceOf(wallets[account].address);
+	donate(account, total.valueOf());
+};
+
 function reuseUnspent(account) {
   TokenContract.transfer(CharityContract.address, balances[account], {from: account, gas: 1000000})
     .then(function(tx) {
@@ -98,13 +105,10 @@ function reuseUnspent(account) {
   });
 }
 
-function validateOutcome(name, value) {
-  return CharityContract.unlockOutcome(name, value, {from: judgeAccount, gas: 500000}).then(function() {
-    console.log("Validating outcome: " + name + " valued at: " + value);
-    refreshBalance();
-    showAllImpacts();
-    return linkImpact(name, value);
-  });
+window.validateOutcome = async function(name, value) {
+  await ProjectContract.unlockOutcome(TokenContract.address, name, value, {from: judgeAccount, gas: 500000});
+  refreshBalance();
+  return linkImpact(name, value);
 }
 
 window.payBack = async function(account) {
@@ -173,12 +177,19 @@ async function deployProject() {
 	Project.setProvider(web3.currentProvider);
 	Catalog.setProvider(web3.currentProvider);
 	ImpactRegistry.setProvider(web3.currentProvider);
+	Linker.setProvider(web3.currentProvider);
 
 	ProjectContract = await Project.new(PROJECT_NAME, {from: aliceAccount, gas: 2000000});
 	printContract(ProjectContract);
 
-	var registry = await ImpactRegistry.new(ProjectContract.address, {from: aliceAccount, gas: 2000000});
-	await ProjectContract.setImpactRegistry(registry.address, {from: aliceAccount, gas: 2000000});
+	await ProjectContract.setJudge(judgeAccount, {from: aliceAccount, gas: 2000000});
+	await ProjectContract.setBeneficiary(beneficiaryAccount, {from: aliceAccount, gas: 2000000});
+
+	ImpactContract = await ImpactRegistry.new(ProjectContract.address, {from: aliceAccount, gas: 2000000});
+	var linker = await Linker.new(ImpactContract.address, 20, {from: aliceAccount, gas: 2000000});
+	await ImpactContract.setLinker(linker.address, {from: aliceAccount, gas: 2000000});
+
+	await ProjectContract.setImpactRegistry(ImpactContract.address, {from: aliceAccount, gas: 2000000});
 
 	CatalogContract = await Catalog.new({from: aliceAccount, gas: 2000000});
 	printContract(CatalogContract);
