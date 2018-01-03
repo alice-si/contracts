@@ -15,7 +15,7 @@ contract DonationWallet is Ownable {
     projectCatalog = _projectCatalog;
   }
 
-  function donate(ERC20 _token, uint _amount, string _projectName) onlyOwner {
+  function donate(ERC20 _token, uint _amount, string _projectName) public onlyOwner {
     address projectAddress = projectCatalog.getProjectAddress(_projectName);
     require(projectAddress != address(0));
 
@@ -23,11 +23,11 @@ contract DonationWallet is Ownable {
     Project(projectAddress).donateFromWallet(_token, _amount);
   }
 
-  function refund(ERC20 _token, uint _amount) onlyOwner {
+  function refund(ERC20 _token, uint _amount) public onlyOwner {
     _token.transfer(owner, _amount);
   }
 
-  function balance(ERC20 _token) constant returns(uint256){
+  function balance(ERC20 _token) public view returns(uint256){
     return _token.balanceOf(this);
   }
 
