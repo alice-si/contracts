@@ -81,8 +81,6 @@ window.deposit = function(account, value) {
 };
 
 window.donate = async function(account, value) {
-	//var a = await wallets[account].getPC({from: aliceAccount, gas: 1000000});
-	//console.log(a);
 	wallets[account].donate(TokenContract.address, value, PROJECT_NAME, {from: aliceAccount, gas: 1000000}).then(function(tx) {
 	 	refreshBalance();
 	});
@@ -109,17 +107,14 @@ function validateOutcome(name, value) {
   });
 }
 
-function payBackAll() {
-  payBack(donor1Account);
-  payBack(donor2Account);
+window.payBack = async function(account) {
+  var tx = await ProjectContract.payBack(TokenContract.address, wallets[account].address, {from: aliceAccount, gas: 1000000});
+  refreshBalance();
 }
 
-function payBack(account) {
-  CharityContract.payBack(account, {from: aliceAccount, gas: 1000000}).then(function() {
-    console.log("Payback done");
-    refreshBalance();
-    return null;
-  });
+window.payBackAll = function() {
+	payBack(donor1Account);
+	payBack(donor2Account);
 }
 
 function linkImpact(name, outcomeValue) {
@@ -162,7 +157,7 @@ function setupWeb3Filter() {
   var filter = web3.eth.filter({});
 
   filter.watch(function (error, log) {
-    console.log(log);
+    //console.log(log);
     printTx(log.transactionHash);
   });
 }
