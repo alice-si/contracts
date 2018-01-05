@@ -13,8 +13,8 @@ contract Coupon is StandardToken, Ownable {
 
     string public name = "Alice Coupon";
     uint8 public decimals = 2;
-    string public symbol = "ALT";
-    string public version = 'ALT 1.0';
+    string public symbol = "ALC";
+    string public version = 'ALC 1.0';
 
 
     function mint(address _to, uint256 _value) public onlyOwner {
