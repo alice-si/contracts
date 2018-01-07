@@ -15,10 +15,15 @@ contract ProjectWithBonds is Project {
     event CouponIssuedEvent(address indexed to, uint value);
     event CouponRepaidEvent(address indexed from, uint value);
 
-    function ProjectWithBonds(string _name) public
+    uint256 public couponNominalPrice;
+
+
+    function ProjectWithBonds(string _name, uint256 _couponNominalPrice) public
         Project(_name) {
-        coupon = new Coupon();
+        couponNominalPrice = _couponNominalPrice;
+        coupon = new Coupon(couponNominalPrice);
     }
+
 
     function investFromWallet(ERC20 _token, uint _amount) public {
         require(_token.transferFrom(msg.sender, address(this), _amount));
@@ -39,6 +44,7 @@ contract ProjectWithBonds is Project {
         OutcomeEvent(_name, _value);
     }
 
+
     function payBack(ERC20 _token, address account) public onlyOwner {
         uint balance = getBalance(account);
         if (balance > 0) {
@@ -47,6 +53,7 @@ contract ProjectWithBonds is Project {
             ImpactRegistry(IMPACT_REGISTRY_ADDRESS).payBack(account);
         }
     }
+
 
     function getCoupon() public view returns(Coupon) {
         return coupon;

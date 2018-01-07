@@ -16,6 +16,12 @@ contract Coupon is StandardToken, Ownable {
     string public symbol = "ALC";
     string public version = 'ALC 1.0';
 
+    uint256 public nominalPrice;
+
+    function Coupon(uint256 _price) {
+        nominalPrice = _price;
+    }
+
 
     function mint(address _to, uint256 _value) public onlyOwner {
         totalSupply = totalSupply.add(_value);

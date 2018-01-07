@@ -14,15 +14,17 @@ contract('ProjectWithBonds', function(accounts) {
 	var coupon;
 
 	it("should deploy Project with Bonds contract", async function() {
-		project = await ProjectWithBonds.new("Test project");
+		project = await ProjectWithBonds.new("Test project", 100);
 
+		(await project.couponNominalPrice()).should.be.bignumber.equal(100);
 	});
 
 	it("should create coupon contract", async function() {
 		let couponAddress = await project.getCoupon();
 		coupon = await Coupon.at(couponAddress);
-		let couponName = await coupon.name();
-		couponName.should.be.equal("Alice Coupon");
+
+		(await coupon.name()).should.be.equal("Alice Coupon");
+		(await coupon.nominalPrice()).should.be.bignumber.equal(100);
 	});
 
 });
