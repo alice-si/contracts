@@ -20,6 +20,7 @@ contract('ProjectWithBonds', function([owner, beneficiary]) {
 
 	it("should deploy Project with Bonds contract", async function() {
 		project = await ProjectWithBonds.new("Test project", 100);
+		await project.setBeneficiary(beneficiary);
 
 		catalog = await ProjectCatalog.new();
 		await catalog.addProject("TEST", project.address);
@@ -41,6 +42,14 @@ contract('ProjectWithBonds', function([owner, beneficiary]) {
 		await token.mint(wallet.address, 100);
 
 		(await token.balanceOf(wallet.address)).should.be.bignumber.equal(100);
+	});
+
+	it("should invest and get coupons", async function() {
+		await wallet.invest(AliceToken.address, 100, "TEST");
+
+		(await token.balanceOf(wallet.address)).should.be.bignumber.equal(0);
+		(await token.balanceOf(beneficiary)).should.be.bignumber.equal(100);
+		(await coupon.balanceOf(wallet.address)).should.be.bignumber.equal(1);
 	});
 
 });
