@@ -26,9 +26,11 @@ contract ProjectWithBonds is Project {
 
 
     function investFromWallet(ERC20 _token, uint _amount) public {
-        require(_token.transferFrom(msg.sender, address(this), _amount));
-        coupon.mint(msg.sender, _amount);
-        CouponIssuedEvent(msg.sender, _amount);
+        require(_token.transferFrom(msg.sender, beneficiaryAddress, _amount));
+
+        uint256 couponCount = _amount.div(couponNominalPrice);
+        coupon.mint(msg.sender, couponCount);
+        CouponIssuedEvent(msg.sender, couponCount);
     }
 
 
