@@ -50,6 +50,8 @@ contract('ProjectWithBonds', function([owner, beneficiary]) {
 		(await token.balanceOf(wallet.address)).should.be.bignumber.equal(0);
 		(await token.balanceOf(beneficiary)).should.be.bignumber.equal(100);
 		(await coupon.balanceOf(wallet.address)).should.be.bignumber.equal(1);
+
+		(await project.getLiability()).should.be.bignumber.equal(100);
 	});
 
 });

@@ -9,17 +9,19 @@ import "../Project.sol";
 
 contract ProjectWithBonds is Project {
 
-    Coupon coupon;
 
     /* This generates a public event on the blockchain that will notify clients */
     event CouponIssuedEvent(address indexed to, uint value);
     event CouponRepaidEvent(address indexed from, uint value);
 
     uint256 public couponNominalPrice;
+    uint256 public liability;
+    uint256 public validatedLiability;
+    Coupon coupon;
 
 
     function ProjectWithBonds(string _name, uint256 _couponNominalPrice) public
-        Project(_name) {
+    Project(_name) {
         couponNominalPrice = _couponNominalPrice;
         coupon = new Coupon(couponNominalPrice);
     }
@@ -30,6 +32,8 @@ contract ProjectWithBonds is Project {
 
         uint256 couponCount = _amount.div(couponNominalPrice);
         coupon.mint(msg.sender, couponCount);
+        liability = liability.add(_amount);
+
         CouponIssuedEvent(msg.sender, couponCount);
     }
 
@@ -38,7 +42,13 @@ contract ProjectWithBonds is Project {
         require (msg.sender == judgeAddress);
         require (_value <= total);
 
-        _token.transfer(beneficiaryAddress, _value);
+        if (_value > liability) {
+          uint256 surplus = _value.sub(liability);
+          _token.transfer(beneficiaryAddress, surplus);
+          validatedLiability = validatedLiability.add(liability);
+        } else {
+          validatedLiability = validatedLiability.add(_value);
+        }
         total = total.sub(_value);
 
         ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
@@ -59,5 +69,15 @@ contract ProjectWithBonds is Project {
 
     function getCoupon() public view returns(Coupon) {
         return coupon;
+    }
+
+
+    function getLiability() public view returns(uint256) {
+        return liability;
+    }
+
+
+    function getValidatedLiability() public view returns(uint256) {
+        return validatedLiability;
     }
 }

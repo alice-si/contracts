@@ -52,6 +52,7 @@ function refreshBalance() {
   showBalance(ProjectContract.address, "balance_charity");
   showBalance(beneficiaryAccount, "balance_beneficiary");
   showCoupons(InvestorContract.address, "coupons");
+  showLiability("liability");
 }
 
 function showBalance(account, element) {
@@ -66,7 +67,15 @@ function showCoupons(account, element) {
 	CouponContract.balanceOf(account).then(function(value) {
 		var balance_element = document.getElementById(element);
 		balance_element.innerHTML = value.valueOf();
-		balances[account] = value;
+	});
+}
+
+function showLiability(element) {
+	ProjectContract.getLiability().then(function(liability) {
+		ProjectContract.getValidatedLiability().then(function(validated) {
+			var balance_element = document.getElementById(element);
+			balance_element.innerHTML = liability.valueOf() + " LHC ( " + validated.valueOf() + " validated )";
+		});
 	});
 }
 
