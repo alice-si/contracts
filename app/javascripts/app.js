@@ -8,18 +8,22 @@ import { default as contract } from 'truffle-contract'
 // Import our contract artifacts and turn them into usable abstractions.
 import alice_token_artifacts from '../../build/contracts/AliceToken.json';
 import wallet_artifacts from '../../build/contracts/DonationWallet.json';
-import project_artifacts from '../../build/contracts/Project.json';
+import project_with_bonds_artifacts from '../../build/contracts/ProjectWithBonds.json';
 import catalog_artifacts from '../../build/contracts/ProjectCatalog.json';
 import impact_registry_artifacts from '../../build/contracts/ImpactRegistry.json';
 import linker_artifacts from '../../build/contracts/FlexibleImpactLinker.json';
+import investor_artifacts from '../../build/contracts/InvestmentWallet.json';
+import coupon_artifacts from '../../build/contracts/Coupon.json';
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
 var AliceToken = contract(alice_token_artifacts);
 var Wallet = contract(wallet_artifacts);
-var Project = contract(project_artifacts);
+var ProjectWithBonds = contract(project_with_bonds_artifacts);
 var Catalog = contract(catalog_artifacts);
 var ImpactRegistry = contract(impact_registry_artifacts);
 var Linker = contract(linker_artifacts);
+var Investor = contract(investor_artifacts);
+var Coupon = contract(coupon_artifacts);
 
 const PROJECT_NAME = "DEMO_PROJECT";
 
@@ -35,6 +39,8 @@ var CharityContract;
 var ImpactContract;
 var CatalogContract;
 var ProjectContract;
+var InvestorContract;
+var CouponContract;
 
 var balances = {};
 var wallets = {};
@@ -42,16 +48,26 @@ var wallets = {};
 function refreshBalance() {
   showBalance(wallets[donor1Account].address,  "balance_donor_1");
   showBalance(wallets[donor2Account].address,  "balance_donor_2");
+  showBalance(InvestorContract.address,  "balance_investor");
   showBalance(ProjectContract.address, "balance_charity");
   showBalance(beneficiaryAccount, "balance_beneficiary");
+  showCoupons(InvestorContract.address, "coupons");
 }
 
 function showBalance(account, element) {
-  TokenContract.balanceOf(account).then(function(value) {
+	TokenContract.balanceOf(account).then(function(value) {
     var balance_element = document.getElementById(element);
     balance_element.innerHTML = value.valueOf();
     balances[account] = value;
   });
+}
+
+function showCoupons(account, element) {
+	CouponContract.balanceOf(account).then(function(value) {
+		var balance_element = document.getElementById(element);
+		balance_element.innerHTML = value.valueOf();
+		balances[account] = value;
+	});
 }
 
 function showAllImpacts() {
@@ -82,11 +98,25 @@ window.deposit = function(account, value) {
 		});
 };
 
+window.depositToInvestor = function(value) {
+	TokenContract.mint(InvestorContract.address, value, {from: aliceAccount, gas: 1000000}).then(function(tx) {
+		refreshBalance();
+	});
+};
+
 window.donate = async function(account, value) {
 	wallets[account].donate(TokenContract.address, value, PROJECT_NAME, {from: aliceAccount, gas: 1000000}).then(function(tx) {
 	 	refreshBalance();
 	});
 };
+
+window.invest = async function(value) {
+	InvestorContract.invest(TokenContract.address, value, PROJECT_NAME, {from: aliceAccount, gas: 1000000}).then(function(tx) {
+		refreshBalance();
+	});
+};
+
+
 
 window.donateAll = async function(account) {
 	var total = await TokenContract.balanceOf(wallets[account].address);
@@ -153,8 +183,8 @@ function printTx(tx) {
 	printLog("Transaction hash: " + tx);
 }
 
-function printContract(contract) {
-  printLog("Contract " + " deployed to: " + contract.address);
+function printContract(name, contract) {
+  printLog(name + " contract deployed to: " + contract.address);
 }
 
 function setupWeb3Filter() {
@@ -170,17 +200,20 @@ async function deployToken() {
 	AliceToken.setProvider(web3.currentProvider);
 
   TokenContract = await AliceToken.new({from: aliceAccount, gas: 2000000});
-  printContract(TokenContract);
+  printContract("Token", TokenContract);
 }
 
 async function deployProject() {
-	Project.setProvider(web3.currentProvider);
+	ProjectWithBonds.setProvider(web3.currentProvider);
 	Catalog.setProvider(web3.currentProvider);
 	ImpactRegistry.setProvider(web3.currentProvider);
 	Linker.setProvider(web3.currentProvider);
+	Coupon.setProvider(web3.currentProvider);
 
-	ProjectContract = await Project.new(PROJECT_NAME, {from: aliceAccount, gas: 2000000});
-	printContract(ProjectContract);
+	ProjectContract = await ProjectWithBonds.new(PROJECT_NAME, 100, {from: aliceAccount, gas: 4000000});
+	printContract("Project", ProjectContract);
+	CouponContract = Coupon.at(await ProjectContract.getCoupon({from: aliceAccount}));
+
 
 	await ProjectContract.setJudge(judgeAccount, {from: aliceAccount, gas: 2000000});
 	await ProjectContract.setBeneficiary(beneficiaryAccount, {from: aliceAccount, gas: 2000000});
@@ -192,7 +225,7 @@ async function deployProject() {
 	await ProjectContract.setImpactRegistry(ImpactContract.address, {from: aliceAccount, gas: 2000000});
 
 	CatalogContract = await Catalog.new({from: aliceAccount, gas: 2000000});
-	printContract(CatalogContract);
+	printContract("Catalog", CatalogContract);
 
 	await CatalogContract.addProject(PROJECT_NAME, ProjectContract.address, {from: aliceAccount, gas: 2000000});
 }
@@ -201,7 +234,14 @@ async function deployWallet(donor) {
 	Wallet.setProvider(web3.currentProvider);
 
 	wallets[donor] = await Wallet.new(CatalogContract.address, {from: aliceAccount, gas: 2000000});
-	printContract(wallets[donor]);
+	printContract("Donor wallet", wallets[donor]);
+}
+
+async function deployInvestorWallet() {
+	Investor.setProvider(web3.currentProvider);
+
+	InvestorContract = await Investor.new(CatalogContract.address, {from: aliceAccount, gas: 2000000});
+	printContract("Investor wallet", InvestorContract);
 }
 
 async function deploy() {
@@ -209,6 +249,7 @@ async function deploy() {
   await deployProject();
   await deployWallet(donor1Account);
   await deployWallet(donor2Account);
+  await deployInvestorWallet();
 	refreshBalance();
 }
 

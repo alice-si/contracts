@@ -54,11 +54,11 @@
   <div class="col-lg-3 col-xs-6">
     <!-- small box -->
     <div class="small-box bg-yellow">
-      <div class="inner" style="height: 355px">
-        <h3>Contract</h3>
-        <p><i class="fa fa-databas"></i> <span id="balance_charity"></span> LHC</p>
-        <p><i class="fa fa-databas"></i> <span id="accounts"></span> unspent accounts</p>
-        <div style="font-style: italic; text-align: center; padding-top: 20px">
+      <div class="inner" style="height: 180px">
+        <h3>Project</h3>
+        <p><i class="fa fa-database"></i> <span id="balance_charity"></span> LHC</p>
+        <p><span id="liability"></span> LHC liability to investors</p>
+        <div style="font-style: italic; text-align: center; padding-top: 0px">
           Smart contract. Works as an escrow keeping donations before an outcome payment is authorized.
         </div>
       </div>
@@ -67,6 +67,21 @@
       </div>
       <a href="#" class="small-box-footer" onclick="payBackAll()"><i class="fa fa-arrow-circle-left"></i> Pay back</a>
     </div>
+
+    <div class="small-box bg-purple">
+      <div class="inner" style="height: 154px">
+        <h3>Investor Wallet</h3>
+        <p><i class="fa fa-database"></i> <span id="balance_investor"></span> LHC</p>
+        <p><span id="coupons"></span> coupons</p>
+
+      </div>
+      <div class="icon">
+        <i class="ion ion-ios-list-outline"></i>
+      </div>
+      <a href="#" class="small-box-footer" onclick="invest(100)">Invest (100) <i class="fa fa-arrow-circle-up"></i></a>
+      <a href="#" class="small-box-footer" onclick="depositToInvestor(20)">Deposit (20) <i class="fa fa-arrow-circle-down"></i></a>
+    </div>
+
   </div>
   <!-- ./col -->
   <div class="col-lg-3 col-xs-6">
