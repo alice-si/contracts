@@ -14,15 +14,18 @@ contract ProjectWithBonds is Project {
     event CouponIssuedEvent(address indexed to, uint value);
     event CouponRedeemEvent(address indexed from, uint value);
 
+    /* In percent with double digits precision */
+    uint256 public couponInterestRate;
     uint256 public couponNominalPrice;
     uint256 public liability;
     uint256 public validatedLiability;
     Coupon coupon;
 
 
-    function ProjectWithBonds(string _name, uint256 _couponNominalPrice) public
+    function ProjectWithBonds(string _name, uint256 _couponNominalPrice, uint256 _couponInterestRate) public
     Project(_name) {
         couponNominalPrice = _couponNominalPrice;
+        couponInterestRate = _couponInterestRate;
         coupon = new Coupon(couponNominalPrice);
     }
 
@@ -32,7 +35,7 @@ contract ProjectWithBonds is Project {
 
         uint256 couponCount = _amount.div(couponNominalPrice);
         coupon.mint(msg.sender, couponCount);
-        liability = liability.add(_amount);
+        liability = liability.add(getPriceWithInterests(_amount));
 
         CouponIssuedEvent(msg.sender, couponCount);
     }
@@ -40,18 +43,19 @@ contract ProjectWithBonds is Project {
 
     function unlockOutcome(string _name, uint _value) public {
         require (msg.sender == judgeAddress);
-        require (_value <= total);
+        uint256 valueWithInterests = getPriceWithInterests(_value);
+        require (valueWithInterests <= total);
 
-        if (_value > liability) {
-          uint256 surplus = _value.sub(liability);
+        if (valueWithInterests > liability) {
+          uint256 liabilityWithInterests = getPriceWithInterests(liability);
+          uint256 surplus = _value.sub(liabilityWithInterests);
           getToken().transfer(beneficiaryAddress, surplus);
-          validatedLiability = validatedLiability.add(liability);
+          validatedLiability = validatedLiability.add(liabilityWithInterests);
         } else {
-          validatedLiability = validatedLiability.add(_value);
+          validatedLiability = validatedLiability.add(valueWithInterests);
         }
 
-        total = total.sub(_value);
-
+        total = total.sub(valueWithInterests);
 
         ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
 
@@ -60,7 +64,7 @@ contract ProjectWithBonds is Project {
 
 
     function redeemCoupons(uint256 _amount) public {
-        uint256 redeemedValue = _amount.mul(couponNominalPrice);
+        uint256 redeemedValue = getPriceWithInterests(_amount.mul(couponNominalPrice));
         require(validatedLiability >= redeemedValue);
 
         coupon.burn(msg.sender, _amount);
@@ -70,6 +74,10 @@ contract ProjectWithBonds is Project {
         validatedLiability = validatedLiability.sub(redeemedValue);
 
         CouponRedeemEvent(msg.sender, _amount);
+    }
+
+    function getPriceWithInterests(uint256 _value) public view returns(uint256) {
+        return _value.add(_value.mul(couponInterestRate).div(10000));
     }
 
 

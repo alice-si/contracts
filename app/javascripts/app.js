@@ -225,7 +225,7 @@ async function deployProject() {
 	Linker.setProvider(web3.currentProvider);
 	Coupon.setProvider(web3.currentProvider);
 
-	ProjectContract = await ProjectWithBonds.new(PROJECT_NAME, 100, {from: aliceAccount, gas: 5000000});
+	ProjectContract = await ProjectWithBonds.new(PROJECT_NAME, 100, 1000, {from: aliceAccount, gas: 5000000});
 	printContract("Project", ProjectContract);
 	CouponContract = Coupon.at(await ProjectContract.getCoupon({from: aliceAccount}));
 
