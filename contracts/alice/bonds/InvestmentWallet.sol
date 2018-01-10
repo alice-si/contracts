@@ -11,12 +11,13 @@ contract InvestmentWallet is DonationWallet {
     }
 
 
-    function invest(ERC20 _token, uint _amount, string _projectName) public onlyOwner {
+    function invest(uint _amount, string _projectName) public onlyOwner {
         address projectAddress = projectCatalog.getProjectAddress(_projectName);
         require(projectAddress != address(0));
+        ERC20 token = ProjectWithBonds(projectAddress).getToken();
 
-        _token.approve(projectAddress, _amount);
-        ProjectWithBonds(projectAddress).investFromWallet(_token, _amount);
+        token.approve(projectAddress, _amount);
+        ProjectWithBonds(projectAddress).investFromWallet(_amount);
     }
 
 }

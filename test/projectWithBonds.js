@@ -39,13 +39,15 @@ contract('ProjectWithBonds', function([owner, beneficiary]) {
 	it("should configure investment wallet", async function() {
 		wallet = await InvestmentWallet.new(catalog.address);
 		token = await AliceToken.deployed();
+		await project.setToken(token.address);
+
 		await token.mint(wallet.address, 100);
 
 		(await token.balanceOf(wallet.address)).should.be.bignumber.equal(100);
 	});
 
 	it("should invest and get coupons", async function() {
-		await wallet.invest(AliceToken.address, 100, "TEST");
+		await wallet.invest(100, "TEST");
 
 		(await token.balanceOf(wallet.address)).should.be.bignumber.equal(0);
 		(await token.balanceOf(beneficiary)).should.be.bignumber.equal(100);

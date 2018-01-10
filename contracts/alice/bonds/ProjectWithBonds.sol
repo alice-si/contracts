@@ -27,8 +27,8 @@ contract ProjectWithBonds is Project {
     }
 
 
-    function investFromWallet(ERC20 _token, uint _amount) public {
-        require(_token.transferFrom(msg.sender, beneficiaryAddress, _amount));
+    function investFromWallet(uint _amount) public {
+        require(getToken().transferFrom(msg.sender, beneficiaryAddress, _amount));
 
         uint256 couponCount = _amount.div(couponNominalPrice);
         coupon.mint(msg.sender, couponCount);
@@ -38,13 +38,13 @@ contract ProjectWithBonds is Project {
     }
 
 
-    function unlockOutcome(ERC20 _token, string _name, uint _value) public {
+    function unlockOutcome(string _name, uint _value) public {
         require (msg.sender == judgeAddress);
         require (_value <= total);
 
         if (_value > liability) {
           uint256 surplus = _value.sub(liability);
-          _token.transfer(beneficiaryAddress, surplus);
+          getToken().transfer(beneficiaryAddress, surplus);
           validatedLiability = validatedLiability.add(liability);
         } else {
           validatedLiability = validatedLiability.add(_value);

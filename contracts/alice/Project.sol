@@ -26,6 +26,10 @@ contract Project is Ownable {
     /* Total amount of all of the donations */
     uint public total;
 
+    /* Token, currently we support a single token per project */
+    ERC20 private token;
+
+
     /* This generates a public event on the blockchain that will notify clients */
     event OutcomeEvent(string id, uint value);
     event DonationEvent(address indexed from, uint value);
@@ -50,6 +54,10 @@ contract Project is Ownable {
         CONTRACT_PROVIDER_ADDRESS = _contractProvider;
     }
 
+    function setToken(ERC20 _token) public onlyOwner {
+        token = _token;
+    }
+
     function notify(address _from, uint _amount) public onlyOwner {
         registerDonation(_from, _amount);
     }
@@ -60,8 +68,8 @@ contract Project is Ownable {
         DonationEvent(_from, _amount);
     }
 
-    function donateFromWallet(ERC20 _token, uint _amount) public {
-        _token.transferFrom(msg.sender, address(this), _amount);
+    function donateFromWallet(uint _amount) public {
+        getToken().transferFrom(msg.sender, address(this), _amount);
         registerDonation(msg.sender, _amount);
     }
 
@@ -69,11 +77,11 @@ contract Project is Ownable {
         total = total.add(_value);
     }
 
-    function unlockOutcome(ERC20 _token, string _name, uint _value) public {
+    function unlockOutcome(string _name, uint _value) public {
         require (msg.sender == judgeAddress);
         require (_value <= total);
 
-        _token.transfer(beneficiaryAddress, _value);
+        getToken().transfer(beneficiaryAddress, _value);
         total = total.sub(_value);
 
         ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
@@ -81,10 +89,10 @@ contract Project is Ownable {
         OutcomeEvent(_name, _value);
     }
 
-    function payBack(ERC20 _token, address account) public onlyOwner {
+    function payBack(address account) public onlyOwner {
         uint balance = getBalance(account);
         if (balance > 0) {
-            _token.transfer(account, balance);
+            getToken().transfer(account, balance);
             total = total.sub(accountBalances[account]);
             ImpactRegistry(IMPACT_REGISTRY_ADDRESS).payBack(account);
         }
@@ -95,8 +103,12 @@ contract Project is Ownable {
     }
 
     /* Extra security measure to save funds in case of critical error or attack */
-    function escape(ERC20 _token, address escapeAddress) public onlyOwner {
-        _token.transfer(escapeAddress, total);
+    function escape(address escapeAddress) public onlyOwner {
+        getToken().transfer(escapeAddress, total);
         total = 0;
+    }
+
+    function getToken() public view returns(ERC20) {
+        return token;
     }
 }

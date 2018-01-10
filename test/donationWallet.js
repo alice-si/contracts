@@ -12,13 +12,12 @@ const should = require('chai')
 	.should();
 
 contract('DonationWallet', function(accounts) {
-	var token;
-	var wallet;
+	var token, wallet, project;
 	var projectCatalog;
 	var donor = accounts[0];
 
 	before("register project in catalog", async function () {
-		var project = await Project.new("Test project");
+		project = await Project.new("Test project");
 		var registry = await ImpactRegistry.new(project.address);
 		await project.setImpactRegistry(registry.address);
 		projectCatalog = await ProjectCatalog.new();
@@ -28,6 +27,7 @@ contract('DonationWallet', function(accounts) {
 
 	it("should deposit tokens to donation wallet", async function() {
 		token = await AliceToken.deployed();
+		await project.setToken(token.address);
 
 	  await token.mint(wallet.address, 100);
 
@@ -43,7 +43,7 @@ contract('DonationWallet', function(accounts) {
 	});
 
 	it("should donate from wallet", async function() {
-		await wallet.donate(token.address, 10, "PROJECT");
+		await wallet.donate(10, "PROJECT");
 
 		var projectAddress = await projectCatalog.getProjectAddress("PROJECT");
 		var project = Project.at(projectAddress);

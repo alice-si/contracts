@@ -19,6 +19,7 @@ contract('Escape', function(accounts) {
 
   it("should get token contract from registry", async function() {
 		token = await AliceToken.deployed();
+		project.setToken(token.address);
     assert.notEqual(token, undefined);
   });
 
@@ -33,7 +34,7 @@ contract('Escape', function(accounts) {
   });
 
   it("should allow escape to secure address", async function () {
-    await project.escape(AliceToken.address, escapeAddress);
+    await project.escape(escapeAddress);
 
 		(await token.balanceOf(project.address)).should.be.bignumber.equal(0);
 		(await token.balanceOf(escapeAddress)).should.be.bignumber.equal(30);
