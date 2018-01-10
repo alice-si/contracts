@@ -114,13 +114,19 @@ window.depositToInvestor = function(value) {
 };
 
 window.donate = async function(account, value) {
-	wallets[account].donate(TokenContract.address, value, PROJECT_NAME, {from: aliceAccount, gas: 1000000}).then(function(tx) {
+	wallets[account].donate(value, PROJECT_NAME, {from: aliceAccount, gas: 1000000}).then(function(tx) {
 	 	refreshBalance();
 	});
 };
 
 window.invest = async function(value) {
-	InvestorContract.invest(TokenContract.address, value, PROJECT_NAME, {from: aliceAccount, gas: 1000000}).then(function(tx) {
+	InvestorContract.invest(value, PROJECT_NAME, {from: aliceAccount, gas: 1000000}).then(function(tx) {
+		refreshBalance();
+	});
+};
+
+window.redeem = async function(value) {
+	InvestorContract.redeemCoupons(value, PROJECT_NAME, {from: aliceAccount, gas: 1000000}).then(function(tx) {
 		refreshBalance();
 	});
 };
@@ -145,13 +151,13 @@ function reuseUnspent(account) {
 }
 
 window.validateOutcome = async function(name, value) {
-  await ProjectContract.unlockOutcome(TokenContract.address, name, value, {from: judgeAccount, gas: 500000});
+  await ProjectContract.unlockOutcome(name, value, {from: judgeAccount, gas: 500000});
   refreshBalance();
   return linkImpact(name, value);
 }
 
 window.payBack = async function(account) {
-  var tx = await ProjectContract.payBack(TokenContract.address, wallets[account].address, {from: aliceAccount, gas: 1000000});
+  var tx = await ProjectContract.payBack(wallets[account].address, {from: aliceAccount, gas: 1000000});
   refreshBalance();
 }
 
@@ -219,13 +225,14 @@ async function deployProject() {
 	Linker.setProvider(web3.currentProvider);
 	Coupon.setProvider(web3.currentProvider);
 
-	ProjectContract = await ProjectWithBonds.new(PROJECT_NAME, 100, {from: aliceAccount, gas: 4000000});
+	ProjectContract = await ProjectWithBonds.new(PROJECT_NAME, 100, {from: aliceAccount, gas: 5000000});
 	printContract("Project", ProjectContract);
 	CouponContract = Coupon.at(await ProjectContract.getCoupon({from: aliceAccount}));
 
 
 	await ProjectContract.setJudge(judgeAccount, {from: aliceAccount, gas: 2000000});
 	await ProjectContract.setBeneficiary(beneficiaryAccount, {from: aliceAccount, gas: 2000000});
+	await ProjectContract.setToken(TokenContract.address, {from: aliceAccount, gas: 2000000});
 
 	ImpactContract = await ImpactRegistry.new(ProjectContract.address, {from: aliceAccount, gas: 2000000});
 	var linker = await Linker.new(ImpactContract.address, 20, {from: aliceAccount, gas: 2000000});
@@ -256,9 +263,9 @@ async function deployInvestorWallet() {
 async function deploy() {
   await deployToken();
   await deployProject();
-  await deployWallet(donor1Account);
-  await deployWallet(donor2Account);
-  await deployInvestorWallet();
+	await deployWallet(donor1Account);
+	await deployWallet(donor2Account);
+	await deployInvestorWallet();
 	refreshBalance();
 }
 

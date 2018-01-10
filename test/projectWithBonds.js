@@ -2,7 +2,9 @@ var ProjectWithBonds = artifacts.require("ProjectWithBonds");
 var ProjectCatalog = artifacts.require("ProjectCatalog");
 var Coupon = artifacts.require("Coupon");
 var InvestmentWallet = artifacts.require("InvestmentWallet");
+var DonationWallet = artifacts.require("DonationWallet");
 var AliceToken = artifacts.require("AliceToken");
+var ImpactRegistry = artifacts.require("ImpactRegistry");
 
 const BigNumber = web3.BigNumber;
 
@@ -11,16 +13,20 @@ const should = require('chai')
 	.use(require('chai-bignumber')(BigNumber))
 	.should()
 
-contract('ProjectWithBonds', function([owner, beneficiary]) {
+contract('ProjectWithBonds', function([owner, beneficiary, judge, donor]) {
 	var project;
 	var coupon;
 	var catalog;
 	var wallet;
 	var token;
+	var donationWallet;
 
 	it("should deploy Project with Bonds contract", async function() {
 		project = await ProjectWithBonds.new("Test project", 100);
+		var registry = await ImpactRegistry.new(project.address);
+		await project.setImpactRegistry(registry.address);
 		await project.setBeneficiary(beneficiary);
+		await project.setJudge(judge);
 
 		catalog = await ProjectCatalog.new();
 		await catalog.addProject("TEST", project.address);
@@ -54,6 +60,29 @@ contract('ProjectWithBonds', function([owner, beneficiary]) {
 		(await coupon.balanceOf(wallet.address)).should.be.bignumber.equal(1);
 
 		(await project.getLiability()).should.be.bignumber.equal(100);
+		(await project.getValidatedLiability()).should.be.bignumber.equal(0);
+	});
+
+	it("should donate to the project", async function() {
+		donationWallet = await DonationWallet.new(catalog.address);
+		await token.mint(donationWallet.address, 100);
+		await donationWallet.donate(100, "TEST");
+
+		(await token.balanceOf(project.address)).should.be.bignumber.equal(100);
+	});
+
+	it("should validate liability", async function() {
+		await project.unlockOutcome("OUTCOME", 100, {from: judge});
+
+		(await project.getLiability()).should.be.bignumber.equal(100);
+		(await project.getValidatedLiability()).should.be.bignumber.equal(100);
+	});
+
+	it("should redeem coupon", async function() {
+		await wallet.redeemCoupons(1, "TEST");
+
+		//(await project.getLiability()).should.be.bignumber.equal(100);
+		//(await project.getValidatedLiability()).should.be.bignumber.equal(100);
 	});
 
 });

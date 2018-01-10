@@ -12,7 +12,7 @@ contract ProjectWithBonds is Project {
 
     /* This generates a public event on the blockchain that will notify clients */
     event CouponIssuedEvent(address indexed to, uint value);
-    event CouponRepaidEvent(address indexed from, uint value);
+    event CouponRedeemEvent(address indexed from, uint value);
 
     uint256 public couponNominalPrice;
     uint256 public liability;
@@ -49,7 +49,9 @@ contract ProjectWithBonds is Project {
         } else {
           validatedLiability = validatedLiability.add(_value);
         }
+
         total = total.sub(_value);
+
 
         ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
 
@@ -57,13 +59,17 @@ contract ProjectWithBonds is Project {
     }
 
 
-    function payBack(ERC20 _token, address account) public onlyOwner {
-        uint balance = getBalance(account);
-        if (balance > 0) {
-            _token.transfer(account, balance);
-            total = total.sub(accountBalances[account]);
-            ImpactRegistry(IMPACT_REGISTRY_ADDRESS).payBack(account);
-        }
+    function redeemCoupons(uint256 _amount) public {
+        uint256 redeemedValue = _amount.mul(couponNominalPrice);
+        require(validatedLiability >= redeemedValue);
+
+        coupon.burn(msg.sender, _amount);
+        getToken().transfer(msg.sender, redeemedValue);
+
+        liability = liability.sub(redeemedValue);
+        validatedLiability = validatedLiability.sub(redeemedValue);
+
+        CouponRedeemEvent(msg.sender, _amount);
     }
 
 
