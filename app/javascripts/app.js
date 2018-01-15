@@ -235,7 +235,7 @@ async function deployProject() {
 	await ProjectContract.setToken(TokenContract.address, {from: aliceAccount, gas: 2000000});
 
 	ImpactContract = await ImpactRegistry.new(ProjectContract.address, {from: aliceAccount, gas: 2000000});
-	var linker = await Linker.new(ImpactContract.address, 20, {from: aliceAccount, gas: 2000000});
+	var linker = await Linker.new(ImpactContract.address, 10, {from: aliceAccount, gas: 2000000});
 	await ImpactContract.setLinker(linker.address, {from: aliceAccount, gas: 2000000});
 
 	await ProjectContract.setImpactRegistry(ImpactContract.address, {from: aliceAccount, gas: 2000000});
