@@ -122,6 +122,10 @@ contract ImpactRegistry is Ownable {
     return impacts[outcome].value;
   }
 
+  function getImpactUnmatchedValue(string outcome) public view returns(uint) {
+    return impacts[outcome].value.sub(impacts[outcome].linked);
+  }
+
   function getImpactDonor(string outcome, uint index) public view returns(address) {
     return impacts[outcome].addresses[index];
   }

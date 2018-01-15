@@ -5,6 +5,7 @@ var InvestmentWallet = artifacts.require("InvestmentWallet");
 var DonationWallet = artifacts.require("DonationWallet");
 var AliceToken = artifacts.require("AliceToken");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
+var Linker = artifacts.require("FlexibleImpactLinker");
 
 const BigNumber = web3.BigNumber;
 
@@ -20,10 +21,15 @@ contract('ProjectWithBonds', function([owner, beneficiary, judge, donor]) {
 	var wallet;
 	var token;
 	var donationWallet;
+	var registry;
+	var linker;
 
 	it("should deploy Project with Bonds contract", async function() {
 		project = await ProjectWithBonds.new("Test project", 100, 1000);
-		var registry = await ImpactRegistry.new(project.address);
+		registry = await ImpactRegistry.new(project.address);
+		linker = await Linker.new(registry.address, 10);
+		await registry.setLinker(linker.address);
+
 		await project.setImpactRegistry(registry.address);
 		await project.setBeneficiary(beneficiary);
 		await project.setJudge(judge);
@@ -65,10 +71,10 @@ contract('ProjectWithBonds', function([owner, beneficiary, judge, donor]) {
 
 	it("should donate to the project", async function() {
 		donationWallet = await DonationWallet.new(catalog.address);
-		await token.mint(donationWallet.address, 110);
-		await donationWallet.donate(110, "TEST");
+		await token.mint(donationWallet.address, 120);
+		await donationWallet.donate(120, "TEST");
 
-		(await token.balanceOf(project.address)).should.be.bignumber.equal(110);
+		(await token.balanceOf(project.address)).should.be.bignumber.equal(120);
 	});
 
 	it("should validate liability", async function() {
@@ -84,6 +90,35 @@ contract('ProjectWithBonds', function([owner, beneficiary, judge, donor]) {
 		(await project.getLiability()).should.be.bignumber.equal(0);
 		(await project.getValidatedLiability()).should.be.bignumber.equal(0);
 		(await token.balanceOf(wallet.address)).should.be.bignumber.equal(110);
+	});
+
+	it("should pay back to donor", async function() {
+		await registry.linkImpact("OUTCOME");
+		await registry.linkImpact("OUTCOME");
+		await registry.linkImpact("OUTCOME");
+		await registry.linkImpact("OUTCOME");
+		await registry.linkImpact("OUTCOME");
+		await registry.linkImpact("OUTCOME");
+		await registry.linkImpact("OUTCOME");
+		await registry.linkImpact("OUTCOME");
+		await registry.linkImpact("OUTCOME");
+		await registry.linkImpact("OUTCOME");
+		await registry.linkImpact("OUTCOME");
+		(await project.getBalance(donationWallet.address)).should.be.bignumber.equal(10);
+	});
+
+
+
+	it("should pay back to donor", async function() {
+		(await token.balanceOf(project.address)).should.be.bignumber.equal(10);
+		(await project.getBalance(donationWallet.address)).should.be.bignumber.equal(10);
+
+		await project.payBack(donationWallet.address);
+
+		(await token.balanceOf(project.address)).should.be.bignumber.equal(0);
+		(await token.balanceOf(donationWallet.address)).should.be.bignumber.equal(10);
+
+
 	});
 
 });

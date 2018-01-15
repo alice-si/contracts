@@ -153,7 +153,7 @@ function reuseUnspent(account) {
 window.validateOutcome = async function(name, value) {
   await ProjectContract.unlockOutcome(name, value, {from: judgeAccount, gas: 500000});
   refreshBalance();
-  return linkImpact(name, value);
+  return linkImpact(name);
 }
 
 window.payBack = async function(account) {
@@ -166,13 +166,13 @@ window.payBackAll = function() {
 	payBack(donor2Account);
 }
 
-function linkImpact(name, outcomeValue) {
-  return ImpactContract.getImpactLinked.call(name, {from: aliceAccount}).then(function(val) {
-    console.log("Linked: " + val + " of: " + outcomeValue);
-    if (val < outcomeValue) {
-      console.log("Linking impact: " + val + " of: " + outcomeValue);
+function linkImpact(name) {
+  return ImpactContract.getImpactUnmatchedValue.call(name, {from: aliceAccount}).then(function(val) {
+    console.log("Unlinked: " + val);
+    if (val > 0) {
+      console.log("Linking impact");
       return ImpactContract.linkImpact(name, {from: aliceAccount, gas: 2000000}).then(function(tx) {
-        return linkImpact(name, outcomeValue);
+        return linkImpact(name);
       });
     }
   });

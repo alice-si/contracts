@@ -57,7 +57,7 @@ contract ProjectWithBonds is Project {
 
         total = total.sub(valueWithInterests);
 
-        ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
+        ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, valueWithInterests);
 
         OutcomeEvent(_name, _value);
     }
