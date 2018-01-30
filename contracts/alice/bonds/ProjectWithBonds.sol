@@ -44,11 +44,12 @@ contract ProjectWithBonds is Project {
     function unlockOutcome(string _name, uint _value) public {
         require (msg.sender == judgeAddress);
         require (_value <= total);
+        uint256 unvalidatedLiability = liability.sub(validatedLiability);
 
-        if (_value > liability) {
-          uint256 surplus = _value.sub(liability);
+        if (_value > unvalidatedLiability) {
+          uint256 surplus = _value.sub(unvalidatedLiability);
           getToken().transfer(beneficiaryAddress, surplus);
-          validatedLiability = validatedLiability.add(liability);
+          validatedLiability = validatedLiability.add(unvalidatedLiability);
         } else {
           validatedLiability = validatedLiability.add(_value);
         }
