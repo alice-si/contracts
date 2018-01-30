@@ -49,7 +49,7 @@ function refreshBalance() {
   showBalance(wallets[donor1Account].address,  "balance_donor_1");
   showBalance(wallets[donor2Account].address,  "balance_donor_2");
   showBalance(InvestorContract.address,  "balance_investor");
-  showBalance(ProjectContract.address, "balance_charity");
+	showProjectTotal("balance_charity");
   showBalance(beneficiaryAccount, "balance_beneficiary");
   showCoupons(InvestorContract.address, "coupons");
   showLiability("liability");
@@ -67,6 +67,13 @@ function showCoupons(account, element) {
 	CouponContract.balanceOf(account).then(function(value) {
 		var balance_element = document.getElementById(element);
 		balance_element.innerHTML = value.valueOf();
+	});
+}
+
+function showProjectTotal(element) {
+	ProjectContract.total().then(function(total) {
+		var balance_element = document.getElementById(element);
+			balance_element.innerHTML = total.valueOf()
 	});
 }
 
