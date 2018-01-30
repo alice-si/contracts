@@ -43,21 +43,19 @@ contract ProjectWithBonds is Project {
 
     function unlockOutcome(string _name, uint _value) public {
         require (msg.sender == judgeAddress);
-        uint256 valueWithInterests = getPriceWithInterests(_value);
-        require (valueWithInterests <= total);
+        require (_value <= total);
 
-        if (valueWithInterests > liability) {
-          uint256 liabilityWithInterests = getPriceWithInterests(liability);
-          uint256 surplus = _value.sub(liabilityWithInterests);
+        if (_value > liability) {
+          uint256 surplus = _value.sub(liability);
           getToken().transfer(beneficiaryAddress, surplus);
-          validatedLiability = validatedLiability.add(liabilityWithInterests);
+          validatedLiability = validatedLiability.add(liability);
         } else {
-          validatedLiability = validatedLiability.add(valueWithInterests);
+          validatedLiability = validatedLiability.add(_value);
         }
 
-        total = total.sub(valueWithInterests);
+        total = total.sub(_value);
 
-        ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, valueWithInterests);
+        ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
 
         OutcomeEvent(_name, _value);
     }

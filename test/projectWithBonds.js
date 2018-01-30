@@ -78,7 +78,7 @@ contract('ProjectWithBonds', function([owner, beneficiary, judge, donor]) {
 	});
 
 	it("should validate liability", async function() {
-		await project.unlockOutcome("OUTCOME", 100, {from: judge});
+		await project.unlockOutcome("OUTCOME", 110, {from: judge});
 
 		(await project.getLiability()).should.be.bignumber.equal(110);
 		(await project.getValidatedLiability()).should.be.bignumber.equal(110);
@@ -122,3 +122,4 @@ contract('ProjectWithBonds', function([owner, beneficiary, judge, donor]) {
 	});
 
 });
+
