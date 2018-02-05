@@ -111,30 +111,35 @@ function showImpact(name) {
 window.deposit = function(account, value) {
   TokenContract.mint(wallets[account].address, value, {from: aliceAccount, gas: 1000000}).then(function(tx) {
 		 refreshBalance();
+		 printTx("Deposit", tx);
 		});
 };
 
 window.depositToInvestor = function(value) {
 	TokenContract.mint(InvestorContract.address, value, {from: aliceAccount, gas: 1000000}).then(function(tx) {
 		refreshBalance();
+		printTx("Investor deposit", tx);
 	});
 };
 
 window.donate = async function(account, value) {
 	wallets[account].donate(value, PROJECT_NAME, {from: aliceAccount, gas: 1000000}).then(function(tx) {
 	 	refreshBalance();
+	 	printTx("Donation", tx);
 	});
 };
 
 window.invest = async function(value) {
 	InvestorContract.invest(value, PROJECT_NAME, {from: aliceAccount, gas: 1000000}).then(function(tx) {
 		refreshBalance();
+		printTx("Investment", tx);
 	});
 };
 
 window.redeem = async function(value) {
 	InvestorContract.redeemCoupons(value, PROJECT_NAME, {from: aliceAccount, gas: 1000000}).then(function(tx) {
 		refreshBalance();
+		printTx("Coupon redemption", tx);
 	});
 };
 
@@ -158,14 +163,16 @@ function reuseUnspent(account) {
 }
 
 window.validateOutcome = async function(name, value) {
-  await ProjectContract.unlockOutcome(name, value, {from: judgeAccount, gas: 500000});
+  var tx = await ProjectContract.unlockOutcome(name, value, {from: judgeAccount, gas: 500000});
+	printTx("Validation", tx);
   refreshBalance();
   return linkImpact(name);
-}
+};
 
 window.payBack = async function(account) {
-  await ProjectContract.payBack(wallets[account].address, {from: aliceAccount, gas: 1000000});
+  var tx = await ProjectContract.payBack(wallets[account].address, {from: aliceAccount, gas: 1000000});
   refreshBalance();
+	printTx("Pay back to account " + account , tx);
 }
 
 window.payBackAll = function() {
@@ -201,22 +208,21 @@ function printLog(text) {
 	logBox.innerHTML += text + "<br/>";
 }
 
-function printTx(tx) {
-	printLog("Transaction hash: " + tx);
+function printTx(name, tx) {
+	printLog(name + " transaction hash: " + tx.tx);
 }
 
 function printContract(name, contract) {
   printLog(name + " contract deployed to: " + contract.address);
 }
 
-function setupWeb3Filter() {
-  var filter = web3.eth.filter({});
-
-  filter.watch(function (error, log) {
-    //console.log(log);
-    printTx(log.transactionHash);
-  });
-}
+// function setupWeb3Filter() {
+//   var filter = web3.eth.filter({});
+//
+//   filter.watch(function (error, log) {
+//     printTx(log.transactionHash);
+//   });
+// }
 
 async function deployToken() {
 	AliceToken.setProvider(web3.currentProvider);
@@ -290,8 +296,6 @@ window.onload = function() {
         alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
         return;
       }
-
-		  setupWeb3Filter();
 
       mapAccounts(accs);
 
