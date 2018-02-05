@@ -255,9 +255,8 @@ contract('ProjectWithBonds - mixed investment and donations', function([owner, b
 		await project.payBack(donationWallet.address);
 
 		(await token.balanceOf(project.address)).should.be.bignumber.equal(0);
+		(await project.total()).should.be.bignumber.equal(0);
 		(await token.balanceOf(donationWallet.address)).should.be.bignumber.equal(20);
-
-
 	});
 
 });

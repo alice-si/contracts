@@ -17,9 +17,6 @@ contract Project is Ownable {
     address public CONTRACT_PROVIDER_ADDRESS;
 
 
-    /* This creates a map with donations per user */
-    mapping (address => uint) accountBalances;
-
     /* Additional structure to help to iterate over donations */
     address[] accountIndex;
 
@@ -93,7 +90,7 @@ contract Project is Ownable {
         uint balance = getBalance(account);
         if (balance > 0) {
             getToken().transfer(account, balance);
-            total = total.sub(accountBalances[account]);
+            total = total.sub(balance);
             ImpactRegistry(IMPACT_REGISTRY_ADDRESS).payBack(account);
         }
     }

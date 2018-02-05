@@ -164,7 +164,7 @@ window.validateOutcome = async function(name, value) {
 }
 
 window.payBack = async function(account) {
-  var tx = await ProjectContract.payBack(wallets[account].address, {from: aliceAccount, gas: 1000000});
+  await ProjectContract.payBack(wallets[account].address, {from: aliceAccount, gas: 1000000});
   refreshBalance();
 }
 
