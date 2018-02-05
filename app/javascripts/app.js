@@ -150,18 +150,6 @@ window.donateAll = async function(account) {
 	donate(account, total.valueOf());
 };
 
-function reuseUnspent(account) {
-  TokenContract.transfer(CharityContract.address, balances[account], {from: account, gas: 1000000})
-    .then(function(tx) {
-      return CharityContract.notify(account, balances[account], {from: aliceAccount, gas: 1000000})
-    .then(function () {
-      console.log("Donated remaining funds: " + balances[account]);
-      refreshBalance();
-      return null;
-    });
-  });
-}
-
 window.validateOutcome = async function(name, value) {
   var tx = await ProjectContract.unlockOutcome(name, value, {from: judgeAccount, gas: 500000});
 	printTx("Validation", tx);
