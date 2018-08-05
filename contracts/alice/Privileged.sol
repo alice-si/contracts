@@ -31,13 +31,13 @@ contract Privileged {
     function createPrivilege(string _privilegeName, address _owner, address _controller) {
         require(privileges[_privilegeName].owner == address(0));
         privileges[_privilegeName] = Privilege(_owner, _controller);
-        PrivilegeTransferred(_privilegeName, address(0), _owner);
+        emit PrivilegeTransferred(_privilegeName, address(0), _owner);
     }
 
 
     function revokePrivilege(string _privilegeName) {
         require(msg.sender == privileges[_privilegeName].controller);
-        PrivilegeTransferred(_privilegeName, privileges[_privilegeName].owner, address(0));
+        emit PrivilegeTransferred(_privilegeName, privileges[_privilegeName].owner, address(0));
         privileges[_privilegeName] = Privilege(0, 0);
     }
 
@@ -50,7 +50,7 @@ contract Privileged {
         require(msg.sender == privileges[_privilege].controller);
         require(_newOwner != address(0));
         privileges[_privilege].owner = _newOwner;
-        PrivilegeTransferred(_privilege, owner, _newOwner);
+        emit PrivilegeTransferred(_privilege, owner, _newOwner);
     }
 
 }

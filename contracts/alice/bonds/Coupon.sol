@@ -4,9 +4,9 @@ Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
 
 pragma solidity ^0.4.22;
 
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
-import 'zeppelin-solidity/contracts/token/StandardToken.sol';
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
+import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
 
 contract Coupon is StandardToken, Ownable {
     using SafeMath for uint256;
@@ -24,17 +24,17 @@ contract Coupon is StandardToken, Ownable {
 
 
     function mint(address _to, uint256 _value) public onlyOwner {
-        totalSupply = totalSupply.add(_value);
+        totalSupply_ = totalSupply_.add(_value);
         balances[_to] =  balances[_to].add(_value);
 
-        MintEvent(_to, _value);
+        emit MintEvent(_to, _value);
     }
 
     function burn(address _from, uint256 _value) public onlyOwner {
-        totalSupply = totalSupply.sub(_value);
+        totalSupply_ = totalSupply_.sub(_value);
         balances[_from] = balances[_from].sub(_value);
 
-        BurnEvent(_from, _value);
+        emit BurnEvent(_from, _value);
     }
 
     event MintEvent(address indexed to, uint value);

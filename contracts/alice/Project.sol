@@ -1,8 +1,8 @@
 pragma solidity ^0.4.22;
 
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import 'zeppelin-solidity/contracts/token/ERC20.sol';
+import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
+import 'openzeppelin-solidity/contracts/token/ERC20/ERC20.sol';
 
 import "./impact/ImpactRegistry.sol";
 import "../ContractProvider.sol";
@@ -31,7 +31,7 @@ contract Project is Ownable {
     event OutcomeEvent(string id, uint value);
     event DonationEvent(address indexed from, uint value);
 
-    function Project(string _name) public {
+    constructor(string _name) public {
         name = _name;
     }
 
@@ -62,7 +62,7 @@ contract Project is Ownable {
     function registerDonation(address _from, uint _amount) internal {
         total = total.add(_amount);
         ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerDonation(_from, _amount);
-        DonationEvent(_from, _amount);
+        emit DonationEvent(_from, _amount);
     }
 
     function donateFromWallet(uint _amount) public {
@@ -83,7 +83,7 @@ contract Project is Ownable {
 
         ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
 
-        OutcomeEvent(_name, _value);
+        emit OutcomeEvent(_name, _value);
     }
 
     function payBack(address account) public onlyOwner {

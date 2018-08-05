@@ -19,7 +19,7 @@ contract MockValidation {
     function validate(string outcome, uint value) {
         Validation memory validation = Validation(now, msg.sender, outcome, value);
         validations.push(validation);
-        ValidationEvent(validation.time, validation.validator, validation.outcome, validation.value);
+        emit ValidationEvent(validation.time, validation.validator, validation.outcome, validation.value);
     }
 
     function getValidationsCount() constant public returns(uint count) {

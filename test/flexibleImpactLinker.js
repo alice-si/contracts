@@ -16,7 +16,7 @@ contract('Flexible Impact Linker', function(accounts) {
     var registry, linker;
 
     it("should attach and configure linker", async function() {
-			registry = await ImpactRegistry.new(Project.address, 1000);
+      registry = await ImpactRegistry.new(Project.address);
 
       linker = await Linker.new(registry.address, 10);
       await registry.setLinker(linker.address);

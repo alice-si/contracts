@@ -4,9 +4,9 @@ var Project = artifacts.require("Project");
 const BigNumber = web3.BigNumber
 
 const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should()
+  .use(require('chai-as-promised'))
+  .use(require('chai-bignumber')(BigNumber))
+  .should()
 
 contract('ProjectCatalog', function(accounts) {
 	var owner = accounts[0];

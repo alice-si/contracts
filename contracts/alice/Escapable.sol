@@ -1,6 +1,6 @@
 pragma solidity ^0.4.22;
 
-import 'zeppelin-solidity/contracts/token/ERC20.sol';
+import 'openzeppelin-solidity/contracts/token/ERC20/ERC20.sol';
 
 
 /**
@@ -37,7 +37,7 @@ contract Escapable {
     function escape(ERC20 token) onlyEscapeController {
         uint total = token.balanceOf(this);
         if (token.transfer(escapeTarget, total)) {
-            FundsEscaped(escapeTarget, total);
+            emit FundsEscaped(escapeTarget, total);
         }
     }
 

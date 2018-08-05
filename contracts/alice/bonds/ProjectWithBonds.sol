@@ -1,8 +1,8 @@
 pragma solidity ^0.4.22;
 
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import 'zeppelin-solidity/contracts/token/ERC20.sol';
+import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
+import 'openzeppelin-solidity/contracts/token/ERC20/ERC20.sol';
 
 import "./Coupon.sol";
 import "../Project.sol";
@@ -37,7 +37,7 @@ contract ProjectWithBonds is Project {
         coupon.mint(msg.sender, couponCount);
         liability = liability.add(getPriceWithInterests(_amount));
 
-        CouponIssuedEvent(msg.sender, couponCount);
+        emit CouponIssuedEvent(msg.sender, couponCount);
     }
 
 
@@ -58,7 +58,7 @@ contract ProjectWithBonds is Project {
 
         ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
 
-        OutcomeEvent(_name, _value);
+        emit OutcomeEvent(_name, _value);
     }
 
 
@@ -72,7 +72,7 @@ contract ProjectWithBonds is Project {
         liability = liability.sub(redeemedValue);
         validatedLiability = validatedLiability.sub(redeemedValue);
 
-        CouponRedeemEvent(msg.sender, _amount);
+        emit CouponRedeemEvent(msg.sender, _amount);
     }
 
     function getPriceWithInterests(uint256 _value) public view returns(uint256) {
