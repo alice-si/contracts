@@ -2,7 +2,7 @@
 Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
 */
 
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.22;
 
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'zeppelin-solidity/contracts/token/StandardToken.sol';
@@ -18,7 +18,7 @@ contract Coupon is StandardToken, Ownable {
 
     uint256 public nominalPrice;
 
-    function Coupon(uint256 _price) {
+    constructor(uint256 _price) {
         nominalPrice = _price;
     }
 

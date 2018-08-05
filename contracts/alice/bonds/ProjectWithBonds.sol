@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.22;
 
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
@@ -22,7 +22,7 @@ contract ProjectWithBonds is Project {
     Coupon coupon;
 
 
-    function ProjectWithBonds(string _name, uint256 _couponNominalPrice, uint256 _couponInterestRate) public
+    constructor(string _name, uint256 _couponNominalPrice, uint256 _couponInterestRate) public
     Project(_name) {
         couponNominalPrice = _couponNominalPrice;
         couponInterestRate = _couponInterestRate;

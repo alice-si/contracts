@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.22;
 
 import './ProjectWithBonds.sol';
 import './Coupon.sol';
@@ -7,7 +7,7 @@ import '../DonationWallet.sol';
 
 contract InvestmentWallet is DonationWallet {
 
-    function InvestmentWallet(ProjectCatalog _projectCatalog) public
+    constructor(ProjectCatalog _projectCatalog) public
         DonationWallet(_projectCatalog) {
     }
 

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.22;
 
 import 'zeppelin-solidity/contracts/token/ERC20.sol';
 import './TwoPhaseTransfers.sol';
@@ -15,7 +15,7 @@ contract CuratedWithWarnings is CuratedTransfers {
     mapping(uint => bool) wasMarked;
     mapping(address => bool) whistleblowers;
 
-    function CuratedWithWarnings(address[] _whistleblowers, address _curator, address[] _proposers, address[] _validators)
+    constructor(address[] _whistleblowers, address _curator, address[] _proposers, address[] _validators)
         CuratedTransfers(_curator, _proposers, _validators) {
 
         for(uint i=0; i<_whistleblowers.length; i++) {

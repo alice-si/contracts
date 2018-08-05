@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.22;
 
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 
@@ -20,7 +20,7 @@ contract OwnableWithRecovery is Ownable {
      * @dev The Ownable constructor sets the original `owner` of the contract to the sender
      * account.
      */
-    function OwnableWithRecovery(address[] _recoveryAddresses, uint8 _minVoteCount)
+    constructor(address[] _recoveryAddresses, uint8 _minVoteCount)
         Ownable() {
         require(_recoveryAddresses.length >= 2 && _recoveryAddresses.length <= 10);
 

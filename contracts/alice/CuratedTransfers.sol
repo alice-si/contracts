@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.22;
 
 import 'zeppelin-solidity/contracts/token/ERC20.sol';
 import './TwoPhaseTransfers.sol';
@@ -20,7 +20,7 @@ contract CuratedTransfers is TwoPhaseTransfers {
     }
 
 
-    function CuratedTransfers(address _curator, address[] _proposers, address[] _validators)
+    constructor(address _curator, address[] _proposers, address[] _validators)
     TwoPhaseTransfers(_proposers, _validators) {
         curator = _curator;
     }

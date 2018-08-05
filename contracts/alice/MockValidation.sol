@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.22;
 
 //Contract only for testing purposes.
 //Don't connect to other contracts or use in a production environment.

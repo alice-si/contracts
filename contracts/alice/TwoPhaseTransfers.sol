@@ -38,7 +38,7 @@ contract TwoPhaseTransfers {
     }
 
 
-    function TwoPhaseTransfers(address[] _proposers, address[] _validators) {
+    constructor(address[] _proposers, address[] _validators) {
         if (_proposers.length > 0) {
             checkProposers = true;
             for(uint i=0; i<_proposers.length; i++) {

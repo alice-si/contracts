@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.22;
 
 import 'zeppelin-solidity/contracts/token/ERC20.sol';
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
@@ -11,7 +11,7 @@ contract DonationWallet is Ownable {
 
   ProjectCatalog projectCatalog;
 
-  function DonationWallet(ProjectCatalog _projectCatalog) {
+  constructor(ProjectCatalog _projectCatalog) {
     projectCatalog = _projectCatalog;
   }
 

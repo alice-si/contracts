@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.22;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
@@ -8,7 +8,7 @@ import './ImpactLinker.sol';
 
 contract OffChainImpactLinker is ImpactLinker {
 
-    function OffChainImpactLinker(ImpactRegistry _impactRegistry)
+    constructor(ImpactRegistry _impactRegistry)
     ImpactLinker(_impactRegistry) {
     }
 

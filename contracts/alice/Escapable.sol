@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.22;
 
 import 'zeppelin-solidity/contracts/token/ERC20.sol';
 
@@ -28,7 +28,7 @@ contract Escapable {
      * @dev The Escapable constructor sets the initial _escapeController and _escapeTarget.
      * account.
      */
-    function Escapable(address _escapeController, address _escapeTarget) {
+    constructor(address _escapeController, address _escapeTarget) {
         escapeController = _escapeController;
         escapeTarget = _escapeTarget;
     }
