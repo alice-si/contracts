@@ -1,13 +1,7 @@
 var CuratedTransfers = artifacts.require("CuratedTransfers");
 var AliceToken = artifacts.require("AliceToken");
 
-const BigNumber = web3.BigNumber;
-
-const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should();
-
+require("./helper").prepare();
 
 contract('CuratedTransfers', function(accounts) {
 	var curatedTransfers;

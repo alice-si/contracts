@@ -7,12 +7,7 @@ var AliceToken = artifacts.require("AliceToken");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
 var Linker = artifacts.require("FlexibleImpactLinker");
 
-const BigNumber = web3.BigNumber;
-
-const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should()
+require("./helper").prepare();
 
 contract('ProjectWithBonds', function([owner, beneficiary, judge, donor]) {
 	var project;

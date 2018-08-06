@@ -1,11 +1,6 @@
 var Privileged     = artifacts.require("Privileged");
 
-const BigNumber = web3.BigNumber
-
-const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should()
+require("./helper").prepare();
 
 contract('Singe impactRegistry donation', function(accounts) {
 	var owner = accounts[0];

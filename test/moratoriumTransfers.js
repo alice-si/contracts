@@ -1,12 +1,7 @@
 var MoratoriumTransfers = artifacts.require("MoratoriumTransfers");
 var AliceToken = artifacts.require("AliceToken");
 
-const BigNumber = web3.BigNumber;
-
-const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should();
+require("./helper").prepare();
 
 const increaseTime = function(duration) {
 	const id = Date.now();

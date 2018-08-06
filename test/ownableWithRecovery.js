@@ -1,11 +1,6 @@
 var OwnableWithRecovery     = artifacts.require("OwnableWithRecovery");
 
-const BigNumber = web3.BigNumber
-
-const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should()
+require("./helper").prepare();
 
 contract('OwnableWithRecover', function(accounts) {
 	var initialOwner = accounts[0];

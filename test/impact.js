@@ -2,13 +2,6 @@ var ImpactRegistry = artifacts.require("ImpactRegistry");
 var Linker = artifacts.require("FlexibleImpactLinker");
 var Project = artifacts.require("Project");
 
-const BigNumber = web3.BigNumber
-
-const should = require('chai')
-    .use(require('chai-as-promised'))
-    .use(require('chai-bignumber')(BigNumber))
-    .should()
-
 contract('Single impactRegistry donation', function(accounts) {
   var donor1 = accounts[1];
   var registry, linker;
