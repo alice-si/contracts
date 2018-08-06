@@ -27,7 +27,7 @@ contract('CuratedTransfers', function(accounts) {
 	});
 
 	it("should fail to block transfer for non curators", async function() {
-		await curatedTransfers.blockTransfer(proposalId).should.be.rejectedWith('VM Exception while processing transaction: revert');
+		await curatedTransfers.blockTransfer(proposalId).shouldBeReverted();
 	});
 
 	it("should allow blocking transfer for curators", async function() {
@@ -35,11 +35,11 @@ contract('CuratedTransfers', function(accounts) {
 	});
 
 	it("should fail to confirm blocked transfer", async function() {
-		await curatedTransfers.confirmTransfer(proposalId).should.be.rejectedWith('VM Exception while processing transaction: revert');
+		await curatedTransfers.confirmTransfer(proposalId).shouldBeReverted();
 	});
 
 	it("should fail to resume blocked transfer for non curators", async function() {
-		await curatedTransfers.resumeTransfer(proposalId).should.be.rejectedWith('VM Exception while processing transaction: revert');
+		await curatedTransfers.resumeTransfer(proposalId).shouldBeReverted();
 	});
 
 	it("should allow resuming blocked transfer for curators", async function() {

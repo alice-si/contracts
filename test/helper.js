@@ -6,8 +6,8 @@ module.exports = {
       .use(require('chai-bignumber')(BigNumber))
       .should();
 
-    // Promise.prototype.shouldBeReverted = async function () {
-    //   await this.should.be.rejectedWith('VM Exception while processing transaction: revert');
-    // };
+    Promise.prototype.shouldBeReverted = async function () {
+      await this.should.be.rejectedWith('VM Exception while processing transaction: revert');
+    };
   }
 };

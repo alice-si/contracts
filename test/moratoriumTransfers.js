@@ -50,7 +50,7 @@ contract('MoratoriumTransfers', function(accounts) {
 	});
 
 	it("should fail to confirm the transfer before moratorium period", async function() {
-		await moratoriumTransfers.confirmTransfer(proposalId).should.be.rejectedWith('VM Exception while processing transaction: revert');
+		await moratoriumTransfers.confirmTransfer(proposalId).shouldBeReverted();
 	});
 
 	it("should confirm the transfer after moratorium", async function() {
