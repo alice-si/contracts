@@ -32,7 +32,7 @@ var aliceAccount;
 var donor1Account;
 var donor2Account;
 var beneficiaryAccount;
-var judgeAccount;
+var validatorAccount;
 
 var TokenContract;
 var CharityContract;
@@ -151,7 +151,7 @@ window.donateAll = async function(account) {
 };
 
 window.validateOutcome = async function(name, value) {
-  var tx = await ProjectContract.unlockOutcome(name, value, {from: judgeAccount, gas: 500000});
+  var tx = await ProjectContract.unlockOutcome(name, value, {from: validatorAccount, gas: 500000});
 	printTx("Validation", tx);
   refreshBalance();
   return linkImpact(name);
@@ -182,7 +182,7 @@ function linkImpact(name) {
 
 function mapAccounts(accounts) {
   aliceAccount = accounts[0];
-  judgeAccount = accounts[1];
+  validatorAccount = accounts[1];
   beneficiaryAccount = accounts[2];
   donor1Account = accounts[3];
   donor2Account = accounts[4];
@@ -231,7 +231,7 @@ async function deployProject() {
 	CouponContract = Coupon.at(await ProjectContract.getCoupon({from: aliceAccount}));
 
 
-	await ProjectContract.setJudge(judgeAccount, {from: aliceAccount, gas: 2000000});
+	await ProjectContract.setJudge(validatorAccount, {from: aliceAccount, gas: 2000000});
 	await ProjectContract.setBeneficiary(beneficiaryAccount, {from: aliceAccount, gas: 2000000});
 	await ProjectContract.setToken(TokenContract.address, {from: aliceAccount, gas: 2000000});
 

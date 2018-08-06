@@ -11,7 +11,7 @@ contract Project is Ownable {
     using SafeMath for uint256;
 
     string public name;
-    address public judgeAddress;
+    address public validatorAddress;
     address public beneficiaryAddress;
     address public IMPACT_REGISTRY_ADDRESS;
     address public CONTRACT_PROVIDER_ADDRESS;
@@ -35,8 +35,8 @@ contract Project is Ownable {
         name = _name;
     }
 
-    function setJudge(address _judgeAddress) public onlyOwner {
-        judgeAddress = _judgeAddress;
+    function setValidator(address _validatorAddress) public onlyOwner {
+        validatorAddress = _validatorAddress;
     }
 
     function setBeneficiary(address _beneficiaryAddress) public onlyOwner {
@@ -75,7 +75,7 @@ contract Project is Ownable {
     }
 
     function unlockOutcome(string _name, uint _value) public {
-        require (msg.sender == judgeAddress);
+        require (msg.sender == validatorAddress);
         require (_value <= total);
 
         getToken().transfer(beneficiaryAddress, _value);

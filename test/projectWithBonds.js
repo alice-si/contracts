@@ -9,7 +9,7 @@ var Linker = artifacts.require("FlexibleImpactLinker");
 
 require("./helper").prepare();
 
-contract('ProjectWithBonds', function([owner, beneficiary, judge, donor]) {
+contract('ProjectWithBonds', function([owner, beneficiary, validator, donor]) {
 	var project;
 	var coupon;
 	var catalog;
@@ -27,7 +27,7 @@ contract('ProjectWithBonds', function([owner, beneficiary, judge, donor]) {
 
 		await project.setImpactRegistry(registry.address);
 		await project.setBeneficiary(beneficiary);
-		await project.setJudge(judge);
+		await project.setValidator(validator);
 
 		catalog = await ProjectCatalog.new();
 		await catalog.addProject("TEST", project.address);
@@ -73,7 +73,7 @@ contract('ProjectWithBonds', function([owner, beneficiary, judge, donor]) {
 	});
 
 	it("should validate liability", async function() {
-		await project.unlockOutcome("OUTCOME", 110, {from: judge});
+		await project.unlockOutcome("OUTCOME", 110, {from: validator});
 
 		(await project.getLiability()).should.be.bignumber.equal(110);
 		(await project.getValidatedLiability()).should.be.bignumber.equal(110);
@@ -118,7 +118,7 @@ contract('ProjectWithBonds', function([owner, beneficiary, judge, donor]) {
 
 });
 
-contract('ProjectWithBonds - mixed investment and donations', function([owner, beneficiary, judge, donor]) {
+contract('ProjectWithBonds - mixed investment and donations', function([owner, beneficiary, validator, donor]) {
 	var project;
 	var coupon;
 	var catalog;
@@ -136,7 +136,7 @@ contract('ProjectWithBonds - mixed investment and donations', function([owner, b
 
 		await project.setImpactRegistry(registry.address);
 		await project.setBeneficiary(beneficiary);
-		await project.setJudge(judge);
+		await project.setValidator(validator);
 
 		catalog = await ProjectCatalog.new();
 		await catalog.addProject("TEST", project.address);
@@ -182,7 +182,7 @@ contract('ProjectWithBonds - mixed investment and donations', function([owner, b
 	});
 
 	it("should validate liability", async function() {
-		await project.unlockOutcome("OUTCOME", 110, {from: judge});
+		await project.unlockOutcome("OUTCOME", 110, {from: validator});
 
 		(await project.getLiability()).should.be.bignumber.equal(110);
 		(await project.getValidatedLiability()).should.be.bignumber.equal(110);
@@ -197,7 +197,7 @@ contract('ProjectWithBonds - mixed investment and donations', function([owner, b
 	});
 
 	it("should validate second outcome", async function() {
-		await project.unlockOutcome("OUTCOME2", 110, {from: judge});
+		await project.unlockOutcome("OUTCOME2", 110, {from: validator});
 
 		(await project.getLiability()).should.be.bignumber.equal(110);
 		(await project.getValidatedLiability()).should.be.bignumber.equal(110);

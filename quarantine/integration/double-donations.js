@@ -15,18 +15,18 @@ contract('Double donations', function(accounts) {
   var main = accounts[0];
   var donor1 = accounts[1];
   var donor2 = accounts[2];
-  var judge = accounts[3];
+  var validator = accounts[3];
   var beneficiary = accounts[4];
   var project, token, contractProvider, impactRegistryRegistry;
 
-  it("should link project to judge", function(done) {
+  it("should link project to validator", function(done) {
     Project.deployed().then(function(instance) {
       project = instance;
-      return project.setJudge(judge, {from: main})
+      return project.setValidator(validator, {from: main})
     }).then(function() {
-      return project.judgeAddress.call();
+      return project.validatorAddress.call();
     }).then(function(address) {
-      return assert.equal(address, judge, "Judge address wasn't set correctly");
+      return assert.equal(address, validator, "Validator address wasn't set correctly");
     })
       .then(done)
       .catch(done);
@@ -127,7 +127,7 @@ contract('Double donations', function(accounts) {
     }).then(function (balance) {
       return assert.equal(balance.valueOf(), 0, "0 wasn't in beneficiary before unlocking outcome");
     }).then(function () {
-      return project.unlockOutcome("Outcome", 25, {from: judge});
+      return project.unlockOutcome("Outcome", 25, {from: validator});
     }).then(function () {
       return token.balanceOf.call(project.address);
     }).then(function (balance) {
