@@ -73,7 +73,7 @@ contract('ProjectWithBonds', function([owner, beneficiary, validator, donor]) {
 	});
 
 	it("should validate liability", async function() {
-		await project.unlockOutcome("OUTCOME", 110, {from: validator});
+		await project.validateOutcome("OUTCOME", 110, {from: validator});
 
 		(await project.getLiability()).should.be.bignumber.equal(110);
 		(await project.getValidatedLiability()).should.be.bignumber.equal(110);
@@ -182,7 +182,7 @@ contract('ProjectWithBonds - mixed investment and donations', function([owner, b
 	});
 
 	it("should validate liability", async function() {
-		await project.unlockOutcome("OUTCOME", 110, {from: validator});
+		await project.validateOutcome("OUTCOME", 110, {from: validator});
 
 		(await project.getLiability()).should.be.bignumber.equal(110);
 		(await project.getValidatedLiability()).should.be.bignumber.equal(110);
@@ -197,7 +197,7 @@ contract('ProjectWithBonds - mixed investment and donations', function([owner, b
 	});
 
 	it("should validate second outcome", async function() {
-		await project.unlockOutcome("OUTCOME2", 110, {from: validator});
+		await project.validateOutcome("OUTCOME2", 110, {from: validator});
 
 		(await project.getLiability()).should.be.bignumber.equal(110);
 		(await project.getValidatedLiability()).should.be.bignumber.equal(110);

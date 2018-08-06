@@ -41,7 +41,7 @@ contract ProjectWithBonds is Project {
     }
 
 
-    function unlockOutcome(string _name, uint _value) public {
+    function validateOutcome(string _name, uint _value) public {
         require (msg.sender == validatorAddress);
         require (_value <= total);
         uint256 unvalidatedLiability = liability.sub(validatedLiability);

@@ -151,7 +151,7 @@ window.donateAll = async function(account) {
 };
 
 window.validateOutcome = async function(name, value) {
-  var tx = await ProjectContract.unlockOutcome(name, value, {from: validatorAccount, gas: 500000});
+  var tx = await ProjectContract.validateOutcome(name, value, {from: validatorAccount, gas: 500000});
 	printTx("Validation", tx);
   refreshBalance();
   return linkImpact(name);

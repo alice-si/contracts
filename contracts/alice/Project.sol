@@ -74,7 +74,7 @@ contract Project is Ownable {
         total = total.add(_value);
     }
 
-    function unlockOutcome(string _name, uint _value) public {
+    function validateOutcome(string _name, uint _value) public {
         require (msg.sender == validatorAddress);
         require (_value <= total);
 

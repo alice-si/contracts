@@ -110,7 +110,7 @@ contract('Single donation', function(accounts) {
     }).then(function (balance) {
       return assert.equal(balance.valueOf(), 0, "0 wasn't in beneficiary before unlocking outcome");
     }).then(function () {
-      return project.unlockOutcome("Outcome", 10, {from: validator});
+      return project.validateOutcome("Outcome", 10, {from: validator});
     }).then(function() {
       return token.balanceOf.call(project.address);
     }).then(function (balance) {
