@@ -2,7 +2,7 @@
 Implements ERC 20 Token standard: https://github.com/ethereum/EIPs/issues/20
 */
 
-pragma solidity ^0.4.22;
+pragma solidity ^0.4.24;
 
 import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol';

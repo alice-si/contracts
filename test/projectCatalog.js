@@ -1,7 +1,7 @@
 var ProjectCatalog = artifacts.require("ProjectCatalog");
 var Project = artifacts.require("Project");
 
-require("./helper").prepare();
+require("./helper").testSetup();
 
 contract('ProjectCatalog', function(accounts) {
 	var owner = accounts[0];

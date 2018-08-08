@@ -14,7 +14,7 @@ const should = require('chai')
 contract('Single donation', function(accounts) {
   var main = accounts[0];
   var donor = accounts[1];
-  var val = accounts[3];
+  var validator = accounts[3];
   var beneficiary = accounts[4];
   var project, token, contractProvider, impactRegistry;
 

@@ -1,7 +1,7 @@
 var Escapable = artifacts.require("Escapable");
 var AliceToken = artifacts.require("AliceToken");
 
-require("./helper").prepare();
+require("./helper").testSetup();
 
 contract('Escapable', function(accounts) {
 	var escapeController = accounts[1];

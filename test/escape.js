@@ -1,7 +1,7 @@
 Project = artifacts.require("project");
 var AliceToken = artifacts.require("AliceToken");
 
-require("./helper").prepare();
+require("./helper").testSetup();
 
 contract('Escape', function(accounts) {
   var project, contractProvider, token;

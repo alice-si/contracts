@@ -1,5 +1,5 @@
 module.exports = {
-  prepare: function () {
+  testSetup: function () {
     const BigNumber = web3.BigNumber;
     require('chai')
       .use(require('chai-as-promised'))

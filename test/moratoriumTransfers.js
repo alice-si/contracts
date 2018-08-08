@@ -1,7 +1,7 @@
 var MoratoriumTransfers = artifacts.require("MoratoriumTransfers");
 var AliceToken = artifacts.require("AliceToken");
 
-require("./helper").prepare();
+require("./helper").testSetup();
 
 const increaseTime = function(duration) {
 	const id = Date.now();

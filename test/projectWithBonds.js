@@ -7,7 +7,7 @@ var AliceToken = artifacts.require("AliceToken");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
 var Linker = artifacts.require("FlexibleImpactLinker");
 
-require("./helper").prepare();
+require("./helper").testSetup();
 
 contract('ProjectWithBonds', function([owner, beneficiary, validator, donor]) {
 	var project;

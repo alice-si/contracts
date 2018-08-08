@@ -3,7 +3,7 @@ var SimpleContractRegistry = artifacts.require("SimpleContractRegistry");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
 var Linker = artifacts.require("OffChainImpactLinker");
 
-require("./helper").prepare();
+require("./helper").testSetup();
 
 contract('Off-Chain Impact Linker', function(accounts) {
 	var donor1 = accounts[1];

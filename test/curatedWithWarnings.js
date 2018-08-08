@@ -1,7 +1,7 @@
 var CuratedWithWarnings = artifacts.require("CuratedWithWarnings");
 var AliceToken = artifacts.require("AliceToken");
 
-require("./helper").prepare();
+require("./helper").testSetup();
 
 contract('CuratedWithWarnings', function(accounts) {
 	var curatedWithWarnings;
