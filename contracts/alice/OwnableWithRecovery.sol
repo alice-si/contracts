@@ -21,7 +21,7 @@ contract OwnableWithRecovery is Ownable {
      * account.
      */
     constructor(address[] _recoveryAddresses, uint8 _minVoteCount)
-        Ownable() {
+        Ownable() public {
         require(_recoveryAddresses.length >= 2 && _recoveryAddresses.length <= 10);
 
         owner = msg.sender;

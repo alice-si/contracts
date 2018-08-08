@@ -28,14 +28,14 @@ contract Privileged {
     mapping(string => Privilege) privileges;
 
 
-    function createPrivilege(string _privilegeName, address _owner, address _controller) {
+    function createPrivilege(string _privilegeName, address _owner, address _controller) public {
         require(privileges[_privilegeName].owner == address(0));
         privileges[_privilegeName] = Privilege(_owner, _controller);
         emit PrivilegeTransferred(_privilegeName, address(0), _owner);
     }
 
 
-    function revokePrivilege(string _privilegeName) {
+    function revokePrivilege(string _privilegeName) public {
         require(msg.sender == privileges[_privilegeName].controller);
         emit PrivilegeTransferred(_privilegeName, privileges[_privilegeName].owner, address(0));
         privileges[_privilegeName] = Privilege(0, 0);

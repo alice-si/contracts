@@ -15,24 +15,19 @@ contract MoratoriumTransfers is TwoPhaseTransfers {
 
 
     constructor(uint _moratoriumPeriod, address[] _proposers, address[] _validators)
-        TwoPhaseTransfers(_proposers, _validators) {
+        TwoPhaseTransfers(_proposers, _validators) public {
         moratoriumPeriod = _moratoriumPeriod;
     }
 
-    function proposeTransfer(ERC20 token, address to, uint value) onlyProposer returns(uint) {
+    function proposeTransfer(ERC20 token, address to, uint value) public onlyProposer returns(uint) {
         uint id = super.proposeTransfer(token, to, value);
         availableFrom[id] = now + moratoriumPeriod;
     }
 
-    function confirmTransfer(uint _transferId) onlyValidator {
-        TransferProposal storage proposal = transferProposals[_transferId];
+    function confirmTransfer(uint _transferId) public onlyValidator {
+        // TransferProposal storage proposal = transferProposals[_transferId];
         require(now > availableFrom[_transferId]);
         super.confirmTransfer(_transferId);
     }
-
-
-
-
-
 
 }

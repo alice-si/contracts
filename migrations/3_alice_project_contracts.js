@@ -19,7 +19,7 @@ module.exports = async function(deployer, network, accounts) {
 
 	//Configure project
 	await project.setImpactRegistry(ImpactRegistry.address);
-	await project.setJudge(validatorAccount);
+	await project.setValidator(validatorAccount);
 	await project.setBeneficiary(beneficiaryAccount);
 	await project.setContractProvider(SimpleContractRegistry.address);
 

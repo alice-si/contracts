@@ -231,7 +231,7 @@ async function deployProject() {
 	CouponContract = Coupon.at(await ProjectContract.getCoupon({from: aliceAccount}));
 
 
-	await ProjectContract.setJudge(validatorAccount, {from: aliceAccount, gas: 2000000});
+	await ProjectContract.setValidator(validatorAccount, {from: aliceAccount, gas: 2000000});
 	await ProjectContract.setBeneficiary(beneficiaryAccount, {from: aliceAccount, gas: 2000000});
 	await ProjectContract.setToken(TokenContract.address, {from: aliceAccount, gas: 2000000});
 

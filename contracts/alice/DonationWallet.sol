@@ -11,7 +11,7 @@ contract DonationWallet is Ownable {
 
   ProjectCatalog projectCatalog;
 
-  constructor(ProjectCatalog _projectCatalog) {
+  constructor(ProjectCatalog _projectCatalog) public {
     projectCatalog = _projectCatalog;
   }
 

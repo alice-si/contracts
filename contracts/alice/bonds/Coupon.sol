@@ -18,7 +18,7 @@ contract Coupon is StandardToken, Ownable {
 
     uint256 public nominalPrice;
 
-    constructor(uint256 _price) {
+    constructor(uint256 _price) public {
         nominalPrice = _price;
     }
 

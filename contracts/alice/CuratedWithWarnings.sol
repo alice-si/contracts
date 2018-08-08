@@ -16,7 +16,7 @@ contract CuratedWithWarnings is CuratedTransfers {
     mapping(address => bool) whistleblowers;
 
     constructor(address[] _whistleblowers, address _curator, address[] _proposers, address[] _validators)
-        CuratedTransfers(_curator, _proposers, _validators) {
+        CuratedTransfers(_curator, _proposers, _validators) public {
 
         for(uint i=0; i<_whistleblowers.length; i++) {
             whistleblowers[_whistleblowers[i]] = true;
@@ -24,7 +24,7 @@ contract CuratedWithWarnings is CuratedTransfers {
     }
 
 
-    function blockTransfer(uint _transferId) {
+    function blockTransfer(uint _transferId) public {
         require(msg.sender == curator || (whistleblowers[msg.sender] && !wasMarked[_transferId]));
         isBlocked[_transferId] = true;
         wasMarked[_transferId] = true;

@@ -14,11 +14,11 @@ contract FlexibleImpactLinker is ImpactLinker {
     mapping (string => uint) linkingCursors;
 
    constructor(ImpactRegistry _impactRegistry, uint _unit)
-     ImpactLinker(_impactRegistry) {
+     ImpactLinker(_impactRegistry) public {
         unit = _unit;
     }
 
-    function updateUnit(uint _value) onlyOwner {
+    function updateUnit(uint _value) public onlyOwner {
         unit = _value;
     }
 
