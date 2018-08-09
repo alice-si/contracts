@@ -52,6 +52,8 @@
     "ganache-cli": "^6.0.3",
     "global": "^4.3.2",
     "truffle-contract": "^3.0.1",
-    "openzeppelin-solidity": "^1.11.0"
+    "openzeppelin-solidity": "^1.11.0",
+    "growl": "^1.10.0",
+    "ssri": "^5.2.2"
   }
 }
