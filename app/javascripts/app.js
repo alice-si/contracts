@@ -173,7 +173,7 @@ function linkImpact(name) {
     console.log("Unlinked: " + val);
     if (val > 0) {
       console.log("Linking impact");
-      return ImpactContract.linkImpact(name, {from: aliceAccount, gas: 2000000}).then(function(tx) {
+      return ImpactContract.linkImpact(name, {from: aliceAccount, gas: 3000000}).then(function(tx) {
         return linkImpact(name);
       });
     }
@@ -215,7 +215,7 @@ function printContract(name, contract) {
 async function deployToken() {
 	AliceToken.setProvider(web3.currentProvider);
 
-  TokenContract = await AliceToken.new({from: aliceAccount, gas: 2000000});
+  TokenContract = await AliceToken.new({from: aliceAccount, gas: 3000000});
   printContract("Token", TokenContract);
 }
 
@@ -231,33 +231,33 @@ async function deployProject() {
 	CouponContract = Coupon.at(await ProjectContract.getCoupon({from: aliceAccount}));
 
 
-	await ProjectContract.setValidator(validatorAccount, {from: aliceAccount, gas: 2000000});
-	await ProjectContract.setBeneficiary(beneficiaryAccount, {from: aliceAccount, gas: 2000000});
-	await ProjectContract.setToken(TokenContract.address, {from: aliceAccount, gas: 2000000});
+	await ProjectContract.setValidator(validatorAccount, {from: aliceAccount, gas: 3000000});
+	await ProjectContract.setBeneficiary(beneficiaryAccount, {from: aliceAccount, gas: 3000000});
+	await ProjectContract.setToken(TokenContract.address, {from: aliceAccount, gas: 3000000});
 
-	ImpactContract = await ImpactRegistry.new(ProjectContract.address, {from: aliceAccount, gas: 2000000});
-	var linker = await Linker.new(ImpactContract.address, 10, {from: aliceAccount, gas: 2000000});
-	await ImpactContract.setLinker(linker.address, {from: aliceAccount, gas: 2000000});
+	ImpactContract = await ImpactRegistry.new(ProjectContract.address, {from: aliceAccount, gas: 3000000});
+	var linker = await Linker.new(ImpactContract.address, 10, {from: aliceAccount, gas: 3000000});
+	await ImpactContract.setLinker(linker.address, {from: aliceAccount, gas: 3000000});
 
-	await ProjectContract.setImpactRegistry(ImpactContract.address, {from: aliceAccount, gas: 2000000});
+	await ProjectContract.setImpactRegistry(ImpactContract.address, {from: aliceAccount, gas: 3000000});
 
-	CatalogContract = await Catalog.new({from: aliceAccount, gas: 2000000});
+	CatalogContract = await Catalog.new({from: aliceAccount, gas: 3000000});
 	printContract("Catalog", CatalogContract);
 
-	await CatalogContract.addProject(PROJECT_NAME, ProjectContract.address, {from: aliceAccount, gas: 2000000});
+	await CatalogContract.addProject(PROJECT_NAME, ProjectContract.address, {from: aliceAccount, gas: 3000000});
 }
 
 async function deployWallet(donor) {
 	Wallet.setProvider(web3.currentProvider);
 
-	wallets[donor] = await Wallet.new(CatalogContract.address, {from: aliceAccount, gas: 2000000});
+	wallets[donor] = await Wallet.new(CatalogContract.address, {from: aliceAccount, gas: 3000000});
 	printContract("Donor wallet", wallets[donor]);
 }
 
 async function deployInvestorWallet() {
 	Investor.setProvider(web3.currentProvider);
 
-	InvestorContract = await Investor.new(CatalogContract.address, {from: aliceAccount, gas: 2000000});
+	InvestorContract = await Investor.new(CatalogContract.address, {from: aliceAccount, gas: 3000000});
 	printContract("Investor wallet", InvestorContract);
 }
 
