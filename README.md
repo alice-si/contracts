@@ -35,9 +35,9 @@ Connection to blockchain node is defined in truffle.js:
         }
     }
 
-We recommend using popular Ethereum test client [testrpc](https://github.com/ethereumjs/testrpc) as a default node:
+We recommend using popular Ethereum test client [ganache](https://www.npmjs.com/package/ganache-cli) as a default node:
 
-    npm install -g ethereumjs-testrpc
+    npm install -g ganache-cli
 
 ### Running tests
 
@@ -47,7 +47,7 @@ To run all of the smart contract tests, use the following truffle command in you
 
 If you are using the testrpc client, remember to start it with a sufficient number of test accounts:
 
-    testrpc -a 100
+    ganache-cli -a 100
 
 You can also use an automated test script instead of the previous two commands:
 
