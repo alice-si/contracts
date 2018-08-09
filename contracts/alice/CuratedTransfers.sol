@@ -1,6 +1,6 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.24;
 
-import 'zeppelin-solidity/contracts/token/ERC20.sol';
+import 'openzeppelin-solidity/contracts/token/ERC20/ERC20.sol';
 import './TwoPhaseTransfers.sol';
 
 
@@ -20,23 +20,23 @@ contract CuratedTransfers is TwoPhaseTransfers {
     }
 
 
-    function CuratedTransfers(address _curator, address[] _proposers, address[] _validators)
-    TwoPhaseTransfers(_proposers, _validators) {
+    constructor(address _curator, address[] _proposers, address[] _validators)
+    TwoPhaseTransfers(_proposers, _validators) public {
         curator = _curator;
     }
 
 
-    function blockTransfer(uint _transferId) onlyCurator {
+    function blockTransfer(uint _transferId) public onlyCurator {
         isBlocked[_transferId] = true;
     }
 
 
-    function resumeTransfer(uint _transferId) onlyCurator {
+    function resumeTransfer(uint _transferId) public onlyCurator {
         isBlocked[_transferId] = false;
     }
 
 
-    function confirmTransfer(uint _transferId) onlyValidator {
+    function confirmTransfer(uint _transferId) public onlyValidator {
         require(!isBlocked[_transferId]);
         super.confirmTransfer(_transferId);
     }

@@ -1,11 +1,7 @@
 Project = artifacts.require("project");
 var AliceToken = artifacts.require("AliceToken");
-const BigNumber = web3.BigNumber;
 
-const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should();
+require("./test-setup");
 
 contract('Escape', function(accounts) {
   var project, contractProvider, token;

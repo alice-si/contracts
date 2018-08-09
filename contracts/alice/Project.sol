@@ -1,8 +1,8 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.24;
 
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import 'zeppelin-solidity/contracts/token/ERC20.sol';
+import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
+import 'openzeppelin-solidity/contracts/token/ERC20/ERC20.sol';
 
 import "./impact/ImpactRegistry.sol";
 import "../ContractProvider.sol";
@@ -11,7 +11,7 @@ contract Project is Ownable {
     using SafeMath for uint256;
 
     string public name;
-    address public judgeAddress;
+    address public validatorAddress;
     address public beneficiaryAddress;
     address public IMPACT_REGISTRY_ADDRESS;
     address public CONTRACT_PROVIDER_ADDRESS;
@@ -31,12 +31,12 @@ contract Project is Ownable {
     event OutcomeEvent(string id, uint value);
     event DonationEvent(address indexed from, uint value);
 
-    function Project(string _name) public {
+    constructor(string _name) public {
         name = _name;
     }
 
-    function setJudge(address _judgeAddress) public onlyOwner {
-        judgeAddress = _judgeAddress;
+    function setValidator(address _validatorAddress) public onlyOwner {
+        validatorAddress = _validatorAddress;
     }
 
     function setBeneficiary(address _beneficiaryAddress) public onlyOwner {
@@ -62,7 +62,7 @@ contract Project is Ownable {
     function registerDonation(address _from, uint _amount) internal {
         total = total.add(_amount);
         ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerDonation(_from, _amount);
-        DonationEvent(_from, _amount);
+        emit DonationEvent(_from, _amount);
     }
 
     function donateFromWallet(uint _amount) public {
@@ -74,8 +74,8 @@ contract Project is Ownable {
         total = total.add(_value);
     }
 
-    function unlockOutcome(string _name, uint _value) public {
-        require (msg.sender == judgeAddress);
+    function validateOutcome(string _name, uint _value) public {
+        require (msg.sender == validatorAddress);
         require (_value <= total);
 
         getToken().transfer(beneficiaryAddress, _value);
@@ -83,7 +83,7 @@ contract Project is Ownable {
 
         ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
 
-        OutcomeEvent(_name, _value);
+        emit OutcomeEvent(_name, _value);
     }
 
     function payBack(address account) public onlyOwner {

@@ -1,6 +1,6 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.24;
 
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
 import './ImpactRegistry.sol';
 import './ImpactLinker.sol';
 
@@ -13,12 +13,12 @@ contract FlexibleImpactLinker is ImpactLinker {
     mapping (string => ImpactRegistry.Impact) impact;
     mapping (string => uint) linkingCursors;
 
-   function FlexibleImpactLinker(ImpactRegistry _impactRegistry, uint _unit)
-     ImpactLinker(_impactRegistry) {
+   constructor(ImpactRegistry _impactRegistry, uint _unit)
+     ImpactLinker(_impactRegistry) public {
         unit = _unit;
     }
 
-    function updateUnit(uint _value) onlyOwner {
+    function updateUnit(uint _value) public onlyOwner {
         unit = _value;
     }
 

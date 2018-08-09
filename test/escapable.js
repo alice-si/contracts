@@ -1,12 +1,7 @@
 var Escapable = artifacts.require("Escapable");
 var AliceToken = artifacts.require("AliceToken");
 
-const BigNumber = web3.BigNumber
-
-const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should()
+require("./test-setup");
 
 contract('Escapable', function(accounts) {
 	var escapeController = accounts[1];
@@ -26,7 +21,7 @@ contract('Escapable', function(accounts) {
 	});
 
 	it("should prevent escaping from non controller", async function() {
-		escapable.escape(token.address, {from: newController}).should.be.rejectedWith('VM Exception while processing transaction: revert');
+		await escapable.escape(token.address, {from: newController}).shouldBeReverted();
 	});
 
 	it("should allow changing controller", async function() {

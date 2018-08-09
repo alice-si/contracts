@@ -1,13 +1,7 @@
 var CuratedWithWarnings = artifacts.require("CuratedWithWarnings");
 var AliceToken = artifacts.require("AliceToken");
 
-const BigNumber = web3.BigNumber;
-
-const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should();
-
+require("./test-setup");
 
 contract('CuratedWithWarnings', function(accounts) {
 	var curatedWithWarnings;
@@ -34,7 +28,7 @@ contract('CuratedWithWarnings', function(accounts) {
 	});
 
 	it("should fail to block transfer for non whistleBlowers", async function() {
-		await curatedWithWarnings.blockTransfer(proposalId).should.be.rejectedWith('VM Exception while processing transaction: revert');
+		await curatedWithWarnings.blockTransfer(proposalId).shouldBeReverted();
 	});
 
 	it("should allow blocking transfer for whistleBlowers", async function() {
@@ -42,7 +36,7 @@ contract('CuratedWithWarnings', function(accounts) {
 	});
 
 	it("shouldn't allow resuming transfer for whistleBlowers", async function() {
-		await curatedWithWarnings.resumeTransfer(proposalId, {from: whistleblower}).should.be.rejectedWith('VM Exception while processing transaction: revert');
+		await curatedWithWarnings.resumeTransfer(proposalId, {from: whistleblower}).shouldBeReverted();
 	});
 
 	it("should allow resuming transfer for curator", async function() {
@@ -50,7 +44,7 @@ contract('CuratedWithWarnings', function(accounts) {
 	});
 
 	it("shouldn't allow blocking again the same transfer", async function() {
-		await curatedWithWarnings.blockTransfer(proposalId, {from: whistleblower}).should.be.rejectedWith('VM Exception while processing transaction: revert');
+		await curatedWithWarnings.blockTransfer(proposalId, {from: whistleblower}).shouldBeReverted();
 	});
 
 	it("should confirm resumed transfer", async function() {

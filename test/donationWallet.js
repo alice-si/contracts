@@ -4,12 +4,7 @@ var DonationWallet = artifacts.require("DonationWallet");
 var AliceToken = artifacts.require("AliceToken");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
 
-const BigNumber = web3.BigNumber;
-
-const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should();
+require("./test-setup");
 
 contract('DonationWallet', function(accounts) {
 	var token, wallet, project;

@@ -1,22 +1,22 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.24;
 
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
+import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 import './ImpactRegistry.sol';
 import './ImpactLinker.sol';
 
 
 contract OffChainImpactLinker is ImpactLinker {
 
-    function OffChainImpactLinker(ImpactRegistry _impactRegistry)
-    ImpactLinker(_impactRegistry) {
+    constructor(ImpactRegistry _impactRegistry)
+    ImpactLinker(_impactRegistry) public {
     }
 
    function linkDirectly(string _impactId, uint _accountIndex, uint _impactVal) external onlyOwner {
      registry.registerImpact(_impactId, _accountIndex, _impactVal);
    }
 
-    function linkImpact(string impactId) external {
+    function linkImpact(string /*impactId*/) external {
         assert(false);
     }
 

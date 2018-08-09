@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.24;
 
 //Contract only for testing purposes.
 //Don't connect to other contracts or use in a production environment.
@@ -16,10 +16,10 @@ contract MockValidation {
 
     Validation[] validations;
 
-    function validate(string outcome, uint value) {
+    function validate(string outcome, uint value) public {
         Validation memory validation = Validation(now, msg.sender, outcome, value);
         validations.push(validation);
-        ValidationEvent(validation.time, validation.validator, validation.outcome, validation.value);
+        emit ValidationEvent(validation.time, validation.validator, validation.outcome, validation.value);
     }
 
     function getValidationsCount() constant public returns(uint count) {

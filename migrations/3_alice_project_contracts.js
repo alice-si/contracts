@@ -4,7 +4,7 @@ var ImpactRegistry = artifacts.require("ImpactRegistry");
 var SimpleContractRegistry = artifacts.require("SimpleContractRegistry");
 
 module.exports = async function(deployer, network, accounts) {
-  var judgeAccount = accounts[1];
+  var validatorAccount = accounts[1];
   var beneficiaryAccount = accounts[2];
   var unit = 10;
 
@@ -19,7 +19,7 @@ module.exports = async function(deployer, network, accounts) {
 
 	//Configure project
 	await project.setImpactRegistry(ImpactRegistry.address);
-	await project.setJudge(judgeAccount);
+	await project.setValidator(validatorAccount);
 	await project.setBeneficiary(beneficiaryAccount);
 	await project.setContractProvider(SimpleContractRegistry.address);
 

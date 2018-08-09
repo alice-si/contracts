@@ -1,7 +1,7 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.24;
 
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
 import './ImpactLinker.sol';
 
 
@@ -39,7 +39,7 @@ contract ImpactRegistry is Ownable {
   mapping (string => Impact) impacts;
 
 
-  function ImpactRegistry(address _masterContract) public {
+  constructor(address _masterContract) public {
     masterContract = _masterContract;
   }
 

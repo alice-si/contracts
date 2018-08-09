@@ -3,20 +3,13 @@ var SimpleContractRegistry = artifacts.require("SimpleContractRegistry");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
 var Linker = artifacts.require("FlexibleImpactLinker");
 
-const BigNumber = web3.BigNumber
-
-const should = require('chai')
-    .use(require('chai-as-promised'))
-    .use(require('chai-bignumber')(BigNumber))
-    .should()
-
 contract('Flexible Impact Linker', function(accounts) {
     var donor1 = accounts[1];
     var donor2 = accounts[2];
     var registry, linker;
 
     it("should attach and configure linker", async function() {
-			registry = await ImpactRegistry.new(Project.address, 1000);
+      registry = await ImpactRegistry.new(Project.address);
 
       linker = await Linker.new(registry.address, 10);
       await registry.setLinker(linker.address);

@@ -1,12 +1,7 @@
 var ProjectCatalog = artifacts.require("ProjectCatalog");
 var Project = artifacts.require("Project");
 
-const BigNumber = web3.BigNumber
-
-const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should()
+require("./test-setup");
 
 contract('ProjectCatalog', function(accounts) {
 	var owner = accounts[0];
@@ -25,7 +20,7 @@ contract('ProjectCatalog', function(accounts) {
 	});
 
 	it("should prevent adding the same project again", async function() {
-		await projectCatalog.addProject("PROJECT", project.address).should.be.rejectedWith('VM Exception while processing transaction: revert');
+		await projectCatalog.addProject("PROJECT", project.address).shouldBeReverted();
 	});
 
 });

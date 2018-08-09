@@ -1,6 +1,6 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.24;
 
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 import './ImpactRegistry.sol';
 
 
@@ -13,7 +13,7 @@ contract ImpactLinker is Ownable {
         _;
     }
 
-    function ImpactLinker(ImpactRegistry _impactRegistry) public {
+    constructor(ImpactRegistry _impactRegistry) public {
         registry = _impactRegistry;
     }
 

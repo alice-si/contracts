@@ -1,11 +1,6 @@
 var Privileged     = artifacts.require("Privileged");
 
-const BigNumber = web3.BigNumber
-
-const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should()
+require("./test-setup");
 
 contract('Singe impactRegistry donation', function(accounts) {
 	var owner = accounts[0];
@@ -23,7 +18,7 @@ contract('Singe impactRegistry donation', function(accounts) {
 
 	it("shouldn't allow creating the same privilege", async function() {
 		await privileged.createPrivilege("owner", owner, owner);
-		await privileged.createPrivilege("owner", owner, owner).should.be.rejectedWith('VM Exception while processing transaction: revert');
+		await privileged.createPrivilege("owner", owner, owner).shouldBeReverted();
 	});
 
 	it("should transfer ownership as controller", async function() {
@@ -33,7 +28,7 @@ contract('Singe impactRegistry donation', function(accounts) {
 
 	it("shouldn't allow transferring ownership as owner", async function() {
 		await privileged.createPrivilege("owner", owner, controller);
-		await privileged.transferPrivilege("owner", owner2, {from: owner}).should.be.rejectedWith('VM Exception while processing transaction: revert');
+		await privileged.transferPrivilege("owner", owner2, {from: owner}).shouldBeReverted();
 	});
 
 	it("should revoke and recreate a privilege", async function() {
@@ -44,7 +39,7 @@ contract('Singe impactRegistry donation', function(accounts) {
 
 	it("shouldn't allow revoking if it's not a controller", async function() {
 		await privileged.createPrivilege("owner", owner, controller);
-		await privileged.revokePrivilege("owner", {from: owner}).should.be.rejectedWith('VM Exception while processing transaction: revert');
+		await privileged.revokePrivilege("owner", {from: owner}).shouldBeReverted();
 	});
 
 

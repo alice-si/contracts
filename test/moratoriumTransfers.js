@@ -1,12 +1,7 @@
 var MoratoriumTransfers = artifacts.require("MoratoriumTransfers");
 var AliceToken = artifacts.require("AliceToken");
 
-const BigNumber = web3.BigNumber;
-
-const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should();
+require("./test-setup");
 
 const increaseTime = function(duration) {
 	const id = Date.now();
@@ -55,7 +50,7 @@ contract('MoratoriumTransfers', function(accounts) {
 	});
 
 	it("should fail to confirm the transfer before moratorium period", async function() {
-		await moratoriumTransfers.confirmTransfer(proposalId).should.be.rejectedWith('VM Exception while processing transaction: revert');
+		await moratoriumTransfers.confirmTransfer(proposalId).shouldBeReverted();
 	});
 
 	it("should confirm the transfer after moratorium", async function() {
