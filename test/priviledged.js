@@ -1,6 +1,6 @@
 var Privileged     = artifacts.require("Privileged");
 
-require("./helper").testSetup();
+require("./test-setup");
 
 contract('Singe impactRegistry donation', function(accounts) {
 	var owner = accounts[0];

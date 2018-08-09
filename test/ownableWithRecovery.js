@@ -1,6 +1,6 @@
 var OwnableWithRecovery     = artifacts.require("OwnableWithRecovery");
 
-require("./helper").testSetup();
+require("./test-setup");
 
 contract('OwnableWithRecover', function(accounts) {
 	var initialOwner = accounts[0];

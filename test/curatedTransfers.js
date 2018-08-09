@@ -1,7 +1,7 @@
 var CuratedTransfers = artifacts.require("CuratedTransfers");
 var AliceToken = artifacts.require("AliceToken");
 
-require("./helper").testSetup();
+require("./test-setup");
 
 contract('CuratedTransfers', function(accounts) {
 	var curatedTransfers;

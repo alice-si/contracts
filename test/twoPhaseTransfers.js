@@ -1,7 +1,7 @@
 var TwoPhaseTransfers = artifacts.require("TwoPhaseTransfers");
 var AliceToken = artifacts.require("AliceToken");
 
-require("./helper").testSetup();
+require("./test-setup");
 
 contract('TwoPhaseTransfers', function(accounts) {
 	var twoPhaseTransfers;

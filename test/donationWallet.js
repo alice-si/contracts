@@ -4,7 +4,7 @@ var DonationWallet = artifacts.require("DonationWallet");
 var AliceToken = artifacts.require("AliceToken");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
 
-require("./helper").testSetup();
+require("./test-setup");
 
 contract('DonationWallet', function(accounts) {
 	var token, wallet, project;
