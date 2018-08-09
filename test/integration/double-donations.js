@@ -4,12 +4,7 @@ var AliceToken = artifacts.require("AliceToken");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
 var Linker = artifacts.require("FlexibleImpactLinker");
 
-const BigNumber = web3.BigNumber;
-
-const should = require('chai')
-	.use(require('chai-as-promised'))
-	.use(require('chai-bignumber')(BigNumber))
-	.should();
+require("../test-setup");
 
 contract('Double donations', function(accounts) {
   var main = accounts[0];
@@ -17,7 +12,7 @@ contract('Double donations', function(accounts) {
   var donor2 = accounts[2];
   var validator = accounts[3];
   var beneficiary = accounts[4];
-  var project, token, contractProvider, impactRegistryRegistry;
+  var project, token, contractProvider, impactRegistry;
 
   it("should link project to validator", function(done) {
     Project.deployed().then(function(instance) {
@@ -56,7 +51,7 @@ contract('Double donations', function(accounts) {
   });
 
   it("should link project to impact registry", function(done) {
-    ImpactRegistry.deployed().then(function(instance) {
+    ImpactRegistry.new(project.address).then(function(instance) {
       impactRegistry = instance;
       return project.setImpactRegistry(impactRegistry.address, {from: main})
     }).then(function() {
@@ -119,7 +114,17 @@ contract('Double donations', function(accounts) {
       .catch(done);
   });
 
-  it("should unlock outcome", function (done) {
+  it("should set token for project", function (done) {
+    project.setToken(token.address, {from: main}).then(function () {
+      return project.getToken.call({from: main});
+    }).then(function(tokenForProject) {
+      return assert.equal(tokenForProject, token.address, "token was not set for project");
+    })
+      .then(done)
+      .catch(done);
+  });
+
+  it("should validate outcome", function (done) {
     token.balanceOf.call(project.address).then(function (balance) {
       assert.equal(balance.valueOf(), 30, "30 wasn't in project before unlocking outcome");
     }).then(function () {
@@ -131,7 +136,7 @@ contract('Double donations', function(accounts) {
     }).then(function () {
       return token.balanceOf.call(project.address);
     }).then(function (balance) {
-      return assert.equal(balance.valueOf(), 5, "0 wasn't in project after unlocking outcome");
+      return assert.equal(balance.valueOf(), 5, "0 wasn't in project after outcome validation");
     }).then(function() {
       return token.balanceOf.call(beneficiary);
     }).then(function (balance) {
