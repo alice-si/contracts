@@ -72,8 +72,17 @@ contract('Multiple donations', function(accounts) {
       .catch(done);
   });
 
+  it("should set token for project", function (done) {
+    project.setToken(token.address, {from: main}).then(function () {
+      return project.getToken.call({from: main});
+    }).then(function(tokenForProject) {
+      return assert.equal(tokenForProject, token.address, "token was not set for project");
+    })
+      .then(done)
+      .catch(done);
+  });
 
-  it("should unlock outcome from multiple accounts", function (done) {
+  it("should validate outcome from multiple accounts", function (done) {
     token.balanceOf.call(project.address).then(function(balance) {
       return assert.equal(balance.valueOf(), 500, "500 wasn't in project before unlocking outcome");
     }).then(function() {
