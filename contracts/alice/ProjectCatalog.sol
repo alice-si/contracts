@@ -20,10 +20,8 @@ contract ProjectCatalog is Ownable {
     function getProjectAddress(string _name) constant public returns(address) {
         bytes32 nameAsBytes = _name.stringToBytes32();
 
-        emit FetchedProject(nameAsBytes, projects[nameAsBytes]);
         return projects[nameAsBytes];
     }
 
     event AddedProject(bytes32 key, address _to);
-    event FetchedProject(bytes32 key, address _from);
 }
