@@ -24,6 +24,6 @@ contract ProjectCatalog is Ownable {
         return projects[nameAsBytes];
     }
 
-    event AddedProject(bytes32 key, address address);
-    event FetchedProject(bytes32 key, address address);
+    event AddedProject(bytes32 key, address _to);
+    event FetchedProject(bytes32 key, address _from);
 }
