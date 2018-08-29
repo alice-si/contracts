@@ -12,11 +12,16 @@ contract ProjectCatalog is Ownable {
         bytes32 nameAsBytes = _name.stringToBytes32();
         require(projects[nameAsBytes] == address(0));
         projects[nameAsBytes] = _projectAddress;
+
+        emit AddedProject(nameAsBytes, _projectAddress);
+
     }
 
     function getProjectAddress(string _name) constant public returns(address) {
         bytes32 nameAsBytes = _name.stringToBytes32();
+
         return projects[nameAsBytes];
     }
 
+    event AddedProject(bytes32 key, address _to);
 }
