@@ -20,18 +20,17 @@ contract DigitalEURToken is StandardToken, Ownable {
   event Burnt(address indexed from, uint value);
 
   function mint(address _to, uint256 _value) public onlyOwner {
-    totalSupply_ = totalSupply_.add(_value);
-    balances[_to] = balances[_to].add(_value);
+      totalSupply_ = totalSupply_.add(_value);
+      balances[_to] = balances[_to].add(_value);
 
-    emit Minted(_to, _value);
+      emit Minted(_to, _value);
+    }
+
+    function burn(address _from, uint256 _value) public onlyOwner {
+      totalSupply_ = totalSupply_.sub(_value);
+      balances[_from] = balances[_from].sub(_value);
+
+      emit Burnt(_from, _value);
+    }
+
   }
-
-  function burn(address _from, uint256 _value) public onlyOwner {
-    require(_from.balance >= _value);
-
-    totalSupply_ = totalSupply_.sub(_value);
-    balances[_from] = balances[_from].sub(_value);
-
-    emit Burnt(_from, _value);
-  }
-}}
