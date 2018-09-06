@@ -1,4 +1,4 @@
-const DigitalGBPToken = artifacts.require("DigitalGBPToken");
+var DigitalGBPToken = artifacts.require("DigitalGBPToken");
 
 contract('DigitalGBPToken', accounts => {
 
@@ -6,56 +6,55 @@ contract('DigitalGBPToken', accounts => {
   var _name = 'DigitalGBPToken';
   var _symbol = 'DGBP';
   var _dec = 2;
-
-  const ERROR_MSG = 'VM Exception while processing transaction: revert';
+  var _owner;
 
   before('deploy DigitalGBPToken', async function() {
     token = await DigitalGBPToken.deployed();
+    _owner = await token.owner();
   });
 
 
   describe('Token Attributes', function() {
     it('Has correct name', async function() {
-      const name = await token.name();
-      assert.equal(name, _name, 'Name is correct');
+      (await token.name()).should.equal(_name);
     });
+
     it('Has correct symbol', async function() {
-      const symbol = await token.symbol();
-      assert.equal(symbol, _symbol, 'Symbol is correct');
+      (await token.symbol()).should.equal(_symbol);
     });
+
     it('Has correct decimals', async function() {
-      const dec = await token.decimals();
-      assert.equal(dec, _dec, 'Decimals are correct');
+      (await token.decimals()).should.be.bignumber.equal(_dec);
     });
   });
 
   describe('Minting and Burning Tokens', function() {
     it('Should Mint 100 tokens', async function() {
-      await token.mint(accounts[1], 100);
-      const totalSupply = await token.balanceOf(accounts[1]);
-      assert.equal(totalSupply, 100, 'Minted 100');
+      await token.mint(accounts[1], 100, { from: _owner });
+      (await token.balanceOf(accounts[1])).should.be.bignumber.equal(100, 'Minted 100');
     });
-    it('Should Mint 100, then Burn 100', async function() {
+
+    it('Should Mint 100, then Burn 100 Successfully', async function() {
       token.mint(accounts[1], 100).then(async function() {
         await token.burn(accounts[1], 100);
-        const res = await token.balanceOf(accounts[1]);
-        console.log("error: " + res + "\n");
-        assert.strictEqual(res, 0, 'Burnt 100');
+        (await token.balanceOf(accounts[1])).should.be.bignumber.equal(0, 'Burnt 100');
       });
     });
-    it('Reject Burn when burning more than total supply', async function() {
-      await token.mint(accounts[1], 100);
 
-      let err = null;
-
+    it('Reject Burn when burning more than account supply', async function() {
       try {
-      await token.burn(accounts[1], 210);
-    } catch (error) {
-      err = error
-      console.log("error: " + err + "\n");
-    }
-      assert.isNotNull(err, 'Burn rejected');
-
+        await token.burn(accounts[1], 1000).should.be.rejectedWith("VM Exception while processing transaction: invalid opcode");
+      } catch (error) {
+        console.log("Reject " + error);
+      }
     });
-  })
+
+    it('Should Mint 100 tokens, only if Owner is minting', async function() {
+        try {
+          await token.mint(accounts[3], 100, { from: accounts[3]}).shouldBeReverted();
+        } catch (error) {
+          console.log(error);
+        }
+    });
+  });
 });
