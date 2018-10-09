@@ -17,7 +17,7 @@ contract ProjectCatalog is Ownable {
 
     }
 
-    function getProjectAddress(string _name) constant public returns(address) {
+    function getProjectAddress(string _name) public view returns(address) {
         bytes32 nameAsBytes = _name.stringToBytes32();
 
         return projects[nameAsBytes];

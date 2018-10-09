@@ -22,5 +22,4 @@ contract('ProjectCatalog', function(accounts) {
 	it("should prevent adding the same project again", async function() {
 		await projectCatalog.addProject("PROJECT", project.address).shouldBeReverted();
 	});
-
 });
