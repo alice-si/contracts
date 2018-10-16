@@ -37,19 +37,6 @@ contract('Double donations', function(accounts) {
       .catch(done);
   });
 
-  it("should link project to contract provider", function(done) {
-    SimpleContractRegistry.deployed().then(function(instance) {
-      contractProvider = instance;
-      return project.setContractProvider(contractProvider.address, {from: main})
-    }).then(function() {
-      return project.CONTRACT_PROVIDER_ADDRESS.call();
-    }).then(function(address) {
-      return assert.equal(address, contractProvider.address, "Contract provider address wasn't set correctly");
-    })
-      .then(done)
-      .catch(done);
-  });
-
   it("should link project to impact registry", function(done) {
     ImpactRegistry.new(project.address).then(function(instance) {
       impactRegistry = instance;

@@ -14,7 +14,6 @@ contract Project is Ownable {
     address public validatorAddress;
     address public beneficiaryAddress;
     address public IMPACT_REGISTRY_ADDRESS;
-    address public CONTRACT_PROVIDER_ADDRESS;
 
 
     /* Additional structure to help to iterate over donations */
@@ -45,10 +44,6 @@ contract Project is Ownable {
 
     function setImpactRegistry(address impactRegistryAddress) public onlyOwner {
         IMPACT_REGISTRY_ADDRESS = impactRegistryAddress;
-    }
-
-    function setContractProvider(address _contractProvider) public onlyOwner {
-        CONTRACT_PROVIDER_ADDRESS = _contractProvider;
     }
 
     function setToken(ERC20 _token) public onlyOwner {

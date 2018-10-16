@@ -32,19 +32,6 @@ contract('Multiple donations', function(accounts) {
       .catch(done);
   });
 
-  it("should link project to contract provider", function(done) {
-    SimpleContractRegistry.deployed().then(function(instance) {
-      contractProvider = instance;
-      return project.setContractProvider(contractProvider.address, {from: main})
-    }).then(function() {
-      return project.CONTRACT_PROVIDER_ADDRESS.call();
-    }).then(function(address) {
-      return assert.equal(address, contractProvider.address, "Contract provider address wasn't set correctly");
-    })
-      .then(done)
-      .catch(done);
-  });
-
   it("should get token contract from registry", function(done) {
     SimpleContractRegistry.deployed().then(function(registryInstance) {
       return registryInstance.contracts.call('digitalGBP');
