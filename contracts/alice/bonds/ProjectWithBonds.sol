@@ -22,8 +22,8 @@ contract ProjectWithBonds is Project {
     Coupon coupon;
 
 
-    constructor(string _name, uint256 _couponNominalPrice, uint256 _couponInterestRate) public
-    Project(_name) {
+    constructor(string _name, uint8 _upfrontPaymentPercentage, uint256 _couponNominalPrice, uint256 _couponInterestRate) public
+    Project(_name, _upfrontPaymentPercentage) {
         couponNominalPrice = _couponNominalPrice;
         couponInterestRate = _couponInterestRate;
         coupon = new Coupon(couponNominalPrice);
