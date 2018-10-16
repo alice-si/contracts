@@ -10,11 +10,11 @@ contract('Escape', function(accounts) {
   var escapeAddress = accounts[2];
 
   it("should link project to contract provider", async function() {
-		project = await Project.new("Test project");
+		project = await Project.new("Test project", 0);
   });
 
   it("should get token contract from registry", async function() {
-		token = await AliceToken.deployed();
+		token = await AliceToken.new();
 		project.setToken(token.address);
     assert.notEqual(token, undefined);
   });
