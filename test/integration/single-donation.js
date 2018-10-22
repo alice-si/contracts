@@ -37,7 +37,6 @@ contract('Project - single donation', function([owner, beneficiary, validator, d
 		await project.setValidator(validator);
 		await project.setToken(token.address);
 
-    await registry.setLinker(linker.address);
     await projectWithBonds.setImpactRegistry(registryForProjectWithBonds.address);
     await projectWithBonds.setBeneficiary(beneficiary);
     await projectWithBonds.setValidator(validator);
