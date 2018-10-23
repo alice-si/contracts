@@ -1,6 +1,6 @@
 {
   "name": "alice-contracts",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Jakub Wojciechowski",
   "description": "Smart contracts for Alice Donation Platform",
   "repository": {
