@@ -11,9 +11,9 @@ contract('TwoPhaseTransfers', function(accounts) {
 	var token;
 	var proposalId;
 
-	before("deploy Escapable and deposit tokens", async function() {
+	before("deploy TwoPhaseTransfers and deposit tokens", async function() {
 		twoPhaseTransfers = await TwoPhaseTransfers.new([proposer], [validator]);
-		token = await AliceToken.deployed();
+		token = await AliceToken.new();
 		await token.mint(twoPhaseTransfers.address, 100);
 	});
 

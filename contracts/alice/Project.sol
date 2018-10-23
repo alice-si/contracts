@@ -14,7 +14,8 @@ contract Project is Ownable {
     address public validatorAddress;
     address public beneficiaryAddress;
     address public IMPACT_REGISTRY_ADDRESS;
-    address public CONTRACT_PROVIDER_ADDRESS;
+    //A percentage of funds that is sent immediately to a charity
+    uint8 public upfrontPaymentPercentage;
 
 
     /* Additional structure to help to iterate over donations */
@@ -31,8 +32,10 @@ contract Project is Ownable {
     event OutcomeEvent(string id, uint value);
     event DonationEvent(address indexed from, uint value);
 
-    constructor(string _name) public {
+    constructor(string _name, uint8 _upfrontPaymentPercentage) public {
+        require(_upfrontPaymentPercentage >= 0 && _upfrontPaymentPercentage < 100);
         name = _name;
+        upfrontPaymentPercentage = _upfrontPaymentPercentage;
     }
 
     function setValidator(address _validatorAddress) public onlyOwner {
@@ -47,21 +50,26 @@ contract Project is Ownable {
         IMPACT_REGISTRY_ADDRESS = impactRegistryAddress;
     }
 
-    function setContractProvider(address _contractProvider) public onlyOwner {
-        CONTRACT_PROVIDER_ADDRESS = _contractProvider;
-    }
-
     function setToken(ERC20 _token) public onlyOwner {
         token = _token;
     }
 
     function notify(address _from, uint _amount) public onlyOwner {
+        require(_from != 0x0);
+        require(_amount > 0);
         registerDonation(_from, _amount);
     }
 
     function registerDonation(address _from, uint _amount) internal {
-        total = total.add(_amount);
-        ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerDonation(_from, _amount);
+        (uint256 upfront, uint256 remainder) = calculateUpfrontSplit(_amount);
+
+        if (upfront > 0) {
+            getToken().transfer(beneficiaryAddress, upfront);
+        }
+
+        total = total.add(remainder);
+        ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerDonation(_from, remainder);
+
         emit DonationEvent(_from, _amount);
     }
 
@@ -107,5 +115,10 @@ contract Project is Ownable {
 
     function getToken() public view returns(ERC20) {
         return token;
+    }
+
+    function calculateUpfrontSplit(uint256 _amount) private view returns(uint256 upfront, uint256 remainder) {
+        upfront = _amount.mul(upfrontPaymentPercentage).div(100);
+        remainder = _amount.sub(upfront);
     }
 }

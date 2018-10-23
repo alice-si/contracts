@@ -15,7 +15,7 @@ contract('Vault', function(accounts) {
 
 	before("deploy Vault contract and deposit tokens", async function() {
 		vault = await Vault.new([whistleblower], curator, [proposer], [validator]);
-		token = await AliceToken.deployed();
+		token = await AliceToken.new();
 		await token.mint(vault.address, 100);
 	});
 

@@ -1,7 +1,6 @@
 var Project = artifacts.require("Project");
 var ProjectCatalog = artifacts.require("ProjectCatalog");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
-var SimpleContractRegistry = artifacts.require("SimpleContractRegistry");
 
 module.exports = async function(deployer, network, accounts) {
   var validatorAccount = accounts[1];
@@ -9,7 +8,7 @@ module.exports = async function(deployer, network, accounts) {
   var unit = 10;
 
   //Deploy Project
-  await deployer.deploy(Project, "London Homeless");
+  await deployer.deploy(Project, "London Homeless", 0);
   let project = await Project.deployed();
 
   //Setup Impact Registry
@@ -21,7 +20,6 @@ module.exports = async function(deployer, network, accounts) {
 	await project.setImpactRegistry(ImpactRegistry.address);
 	await project.setValidator(validatorAccount);
 	await project.setBeneficiary(beneficiaryAccount);
-	await project.setContractProvider(SimpleContractRegistry.address);
 
 	//Register project in catalog
 	await deployer.deploy(ProjectCatalog);

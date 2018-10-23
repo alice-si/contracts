@@ -24,8 +24,8 @@ contract('Project - single donation', function([owner, beneficiary, validator, d
 	var linker;
 
 	it("should deploy Project with Bonds contract", async function() {
-		project = await Project.new("TEST");
-		projectWithBonds = await ProjectWithBonds.new("TEST_WITH_BONDS", 100, 1000);
+		project = await Project.new("TEST", 0);
+		projectWithBonds = await ProjectWithBonds.new("TEST_WITH_BONDS", 0, 100, 1000);
 		registry = await ImpactRegistry.new(project.address);
     registryForProjectWithBonds = await ImpactRegistry.new(projectWithBonds.address);
 		linker = await Linker.new(registry.address, 10);
@@ -37,7 +37,6 @@ contract('Project - single donation', function([owner, beneficiary, validator, d
 		await project.setValidator(validator);
 		await project.setToken(token.address);
 
-    await registry.setLinker(linker.address);
     await projectWithBonds.setImpactRegistry(registryForProjectWithBonds.address);
     await projectWithBonds.setBeneficiary(beneficiary);
     await projectWithBonds.setValidator(validator);

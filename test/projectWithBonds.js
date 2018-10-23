@@ -20,7 +20,7 @@ contract('ProjectWithBonds', function([owner, beneficiary, validator, donor]) {
 	var linker;
 
 	it("should deploy Project with Bonds contract", async function() {
-		project = await ProjectWithBonds.new("Test project", 100, 1000);
+		project = await ProjectWithBonds.new("Test project", 0, 100, 1000);
 		registry = await ImpactRegistry.new(project.address);
 		linker = await Linker.new(registry.address, 10);
 		await registry.setLinker(linker.address);
@@ -129,7 +129,7 @@ contract('ProjectWithBonds - mixed investment and donations', function([owner, b
 	var linker;
 
 	it("should deploy Project with Bonds contract", async function() {
-		project = await ProjectWithBonds.new("Test project", 100, 1000);
+		project = await ProjectWithBonds.new("Test project", 0, 100, 1000);
 		registry = await ImpactRegistry.new(project.address);
 		linker = await Linker.new(registry.address, 10);
 		await registry.setLinker(linker.address);
