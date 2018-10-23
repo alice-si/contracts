@@ -1,8 +1,5 @@
 var Project = artifacts.require("Project");
-var ProjectWithBonds = artifacts.require("ProjectWithBonds");
 var ProjectCatalog = artifacts.require("ProjectCatalog");
-var Coupon = artifacts.require("Coupon");
-var InvestmentWallet = artifacts.require("InvestmentWallet");
 var DonationWallet = artifacts.require("DonationWallet");
 var Gbp = artifacts.require("DigitalGBPToken");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
@@ -16,13 +13,11 @@ contract('Project - single donation', function([owner, beneficiary, validator, d
   var wallet;
   var gbp;
   var registry;
-  var registryForProjectWithBonds;
   var linker;
 
-  it("should deploy Project with Bonds contract", async function() {
+  it("should deploy Project contract", async function() {
     project = await Project.new("TEST", 40);
     registry = await ImpactRegistry.new(project.address);
-    registryForProjectWithBonds = await ImpactRegistry.new(project.address);
     linker = await Linker.new(registry.address, 10);
     gbp = await Gbp.new();
 
