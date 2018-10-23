@@ -113,6 +113,16 @@ contract Project is Ownable {
         total = 0;
     }
 
+    /**
+    * Currently we don't fully support automatic processing of multiple crypto donation
+    * but we can handle various tokens and convert them to our own stable coin on case by case basis
+    */
+    function reclaimAlternativeTokens(ERC20 _alternativeToken, address _targetAddress, uint256 _value) public onlyOwner {
+        require(address(_alternativeToken) != 0x0, "Undefined ERC20 tokens");
+        require(_alternativeToken.balanceOf(address(this)) >= _value, "Insufficient funds deposited on the contract");
+        _alternativeToken.transfer(_targetAddress, _value);
+    }
+
     function getToken() public view returns(ERC20) {
         return token;
     }
