@@ -13,7 +13,9 @@
     "coverage": "scripts/coverage.sh",
     "coveralls": "scripts/coveralls.sh",
     "build": "webpack",
-    "dev": "webpack-dev-server"
+    "dev": "webpack-dev-server",
+    "build-and-run-dev": "truffle migrate && webpack-dev-server --host 0.0.0.0 --port 8080",
+    "update-image": "bash ./scripts/update-image-contracts.sh"
   },
   "license": "MIT",
   "bugs": {
