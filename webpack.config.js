@@ -13,7 +13,7 @@ module.exports = {
     new CopyWebpackPlugin([
       { from: './app/index.html', to: "index.html" }
     ]),
-    new webpack.EnvironmentPlugin(['GANACHE_SERVICE_SERVICE_HOST'])
+    new webpack.EnvironmentPlugin(['GANACHE_EXTERNAL_URL'])
   ],
   module: {
     rules: [
