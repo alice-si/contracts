@@ -271,8 +271,11 @@ async function deploy() {
 }
 
 window.onload = function() {
-	window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-
+	let ganacheUrl = "http://localhost:8545";
+	if (process.env.NODE_ENV == 'production') {
+		ganacheUrl = "http://ganache.demo.alice.si:80";
+	}
+	window.web3 = new Web3(new Web3.providers.HttpProvider(ganacheUrl));
 
 	web3.eth.getAccounts(function(err, accs) {
       if (err != null) {
