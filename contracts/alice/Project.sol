@@ -6,14 +6,18 @@ import 'openzeppelin-solidity/contracts/token/ERC20/ERC20.sol';
 
 import "./impact/ImpactRegistry.sol";
 import "../ContractProvider.sol";
+import "./ClaimsRegistry.sol";
+import './StringUtils.sol';
 
 contract Project is Ownable {
     using SafeMath for uint256;
+    using StringUtils for string;
 
     string public name;
     address public validatorAddress;
     address public beneficiaryAddress;
     address public IMPACT_REGISTRY_ADDRESS;
+    ClaimsRegistry public CLAIMS_REGISTRY;
     //A percentage of funds that is sent immediately to a charity
     uint8 public upfrontPaymentPercentage;
 
@@ -50,6 +54,10 @@ contract Project is Ownable {
         IMPACT_REGISTRY_ADDRESS = impactRegistryAddress;
     }
 
+    function setClaimsRegistry(ClaimsRegistry _claimsRegistry) public onlyOwner {
+        CLAIMS_REGISTRY = _claimsRegistry;
+    }
+
     function setToken(ERC20 _token) public onlyOwner {
         token = _token;
     }
@@ -83,8 +91,14 @@ contract Project is Ownable {
     }
 
     function validateOutcome(string _name, uint _value) public {
-        require (msg.sender == validatorAddress);
-        require (_value <= total);
+        if (address(CLAIMS_REGISTRY) == 0x0) {
+            require (msg.sender == validatorAddress);
+        } else {
+            require(CLAIMS_REGISTRY.getClaim(beneficiaryAddress, address(this), _name.stringToBytes32()) == bytes32(_value));
+            require(CLAIMS_REGISTRY.isApproved(validatorAddress, beneficiaryAddress, address(this), _name.stringToBytes32()));
+        }
+
+        require (_value > 0 && _value <= total);
 
         getToken().transfer(beneficiaryAddress, _value);
         total = total.sub(_value);
