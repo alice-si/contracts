@@ -1,4 +1,4 @@
-Project = artifacts.require("project");
+var Project = artifacts.require("Project");
 var AliceToken = artifacts.require("AliceToken");
 
 require("./test-setup");

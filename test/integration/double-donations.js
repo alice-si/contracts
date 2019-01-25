@@ -1,4 +1,4 @@
-var Project = artifacts.require("project");
+var Project = artifacts.require("Project");
 var AliceToken = artifacts.require("AliceToken");
 var ImpactRegistry = artifacts.require("ImpactRegistry");
 var Linker = artifacts.require("FlexibleImpactLinker");
