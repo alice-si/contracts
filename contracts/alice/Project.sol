@@ -11,7 +11,6 @@ import './StringUtils.sol';
 
 contract Project is Ownable {
     using SafeMath for uint256;
-    using StringUtils for string;
 
     string public name;
     address public validatorAddress;
@@ -25,15 +24,16 @@ contract Project is Ownable {
     /* Additional structure to help to iterate over donations */
     address[] accountIndex;
 
+    mapping (bytes32 => bool) public isClaimValidated;
+
     /* Total amount of all of the donations */
     uint public total;
 
     /* Token, currently we support a single token per project */
     ERC20 private token;
 
-
     /* This generates a public event on the blockchain that will notify clients */
-    event OutcomeEvent(string id, uint value);
+    event OutcomeEvent(bytes32 claimId, uint value);
     event DonationEvent(address indexed from, uint value);
 
     constructor(string _name, uint8 _upfrontPaymentPercentage) public {
@@ -90,12 +90,15 @@ contract Project is Ownable {
         total = total.add(_value);
     }
 
-    function validateOutcome(string _name, uint _value) public {
-        if (address(CLAIMS_REGISTRY) == 0x0) {
-            require (msg.sender == validatorAddress);
-        } else {
-            require(CLAIMS_REGISTRY.getClaim(beneficiaryAddress, address(this), _name.stringToBytes32()) == bytes32(_value));
-            require(CLAIMS_REGISTRY.isApproved(validatorAddress, beneficiaryAddress, address(this), _name.stringToBytes32()));
+    function validateOutcome(bytes32 _claimId, uint _value) public {
+        require (msg.sender == validatorAddress);
+        require (!isClaimValidated[_claimId]);
+
+        // Can only validate claimed outcomes if claims registry is present.
+        if (address(CLAIMS_REGISTRY) != 0x0) {
+            uint claimedValue = uint(
+                CLAIMS_REGISTRY.getClaim(beneficiaryAddress, address(this), _claimId));
+            require (claimedValue == _value);
         }
 
         require (_value > 0 && _value <= total);
@@ -103,9 +106,10 @@ contract Project is Ownable {
         getToken().transfer(beneficiaryAddress, _value);
         total = total.sub(_value);
 
-        ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
+        isClaimValidated[_claimId] = true;
+        ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_claimId, _value);
 
-        emit OutcomeEvent(_name, _value);
+        emit OutcomeEvent(_claimId, _value);
     }
 
     function payBack(address account) public onlyOwner {

@@ -12,11 +12,11 @@ contract OffChainImpactLinker is ImpactLinker {
     ImpactLinker(_impactRegistry) public {
     }
 
-   function linkDirectly(string _impactId, uint _accountIndex, uint _impactVal) external onlyOwner {
-     registry.registerImpact(_impactId, _accountIndex, _impactVal);
+   function linkDirectly(bytes32 _claimId, uint _accountIndex, uint _impactVal) external onlyOwner {
+     registry.registerImpact(_claimId, _accountIndex, _impactVal);
    }
 
-    function linkImpact(string /*impactId*/) external {
+    function linkImpact(bytes32 /*_claimId*/) external {
         assert(false);
     }
 

@@ -51,6 +51,9 @@ contract ClaimsRegistry {
         emit ClaimRemoved(msg.sender, subject, key, now);
     }
 
+    // Explicit approvals are not currently used, claims are approved implicitly
+    // by Project.validateOutcome function.
+
     function approveClaim(address issuer, address subject, bytes32 key) public {
         bytes32 value = getClaim(issuer, subject, key);
         registry[msg.sender][subject][key] = value;
