@@ -6,6 +6,8 @@ import 'openzeppelin-solidity/contracts/token/ERC20/ERC20.sol';
 
 import "./impact/ImpactRegistry.sol";
 import "../ContractProvider.sol";
+import "./ClaimsRegistry.sol";
+import './StringUtils.sol';
 
 contract Project is Ownable {
     using SafeMath for uint256;
@@ -14,6 +16,7 @@ contract Project is Ownable {
     address public validatorAddress;
     address public beneficiaryAddress;
     address public IMPACT_REGISTRY_ADDRESS;
+    ClaimsRegistry public CLAIMS_REGISTRY;
     //A percentage of funds that is sent immediately to a charity
     uint8 public upfrontPaymentPercentage;
 
@@ -21,15 +24,16 @@ contract Project is Ownable {
     /* Additional structure to help to iterate over donations */
     address[] accountIndex;
 
+    mapping (bytes32 => bool) public isClaimValidated;
+
     /* Total amount of all of the donations */
     uint public total;
 
     /* Token, currently we support a single token per project */
     ERC20 private token;
 
-
     /* This generates a public event on the blockchain that will notify clients */
-    event OutcomeEvent(string id, uint value);
+    event OutcomeEvent(bytes32 claimId, uint value);
     event DonationEvent(address indexed from, uint value);
 
     constructor(string _name, uint8 _upfrontPaymentPercentage) public {
@@ -48,6 +52,10 @@ contract Project is Ownable {
 
     function setImpactRegistry(address impactRegistryAddress) public onlyOwner {
         IMPACT_REGISTRY_ADDRESS = impactRegistryAddress;
+    }
+
+    function setClaimsRegistry(ClaimsRegistry _claimsRegistry) public onlyOwner {
+        CLAIMS_REGISTRY = _claimsRegistry;
     }
 
     function setToken(ERC20 _token) public onlyOwner {
@@ -82,16 +90,26 @@ contract Project is Ownable {
         total = total.add(_value);
     }
 
-    function validateOutcome(string _name, uint _value) public {
+    function validateOutcome(bytes32 _claimId, uint _value) public {
         require (msg.sender == validatorAddress);
-        require (_value <= total);
+        require (!isClaimValidated[_claimId]);
+
+        // Can only validate claimed outcomes if claims registry is present.
+        if (address(CLAIMS_REGISTRY) != 0x0) {
+            uint claimedValue = uint(
+                CLAIMS_REGISTRY.getClaim(beneficiaryAddress, address(this), _claimId));
+            require (claimedValue == _value);
+        }
+
+        require (_value > 0 && _value <= total);
 
         getToken().transfer(beneficiaryAddress, _value);
         total = total.sub(_value);
 
-        ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
+        isClaimValidated[_claimId] = true;
+        ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_claimId, _value);
 
-        emit OutcomeEvent(_name, _value);
+        emit OutcomeEvent(_claimId, _value);
     }
 
     function payBack(address account) public onlyOwner {

@@ -41,7 +41,7 @@ contract ProjectWithBonds is Project {
     }
 
 
-    function validateOutcome(string _name, uint _value) public {
+    function validateOutcome(bytes32 _claimId, uint _value) public {
         require (msg.sender == validatorAddress);
         require (_value <= total);
         uint256 unvalidatedLiability = liability.sub(validatedLiability);
@@ -56,9 +56,9 @@ contract ProjectWithBonds is Project {
 
         total = total.sub(_value);
 
-        ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_name, _value);
+        ImpactRegistry(IMPACT_REGISTRY_ADDRESS).registerOutcome(_claimId, _value);
 
-        emit OutcomeEvent(_name, _value);
+        emit OutcomeEvent(_claimId, _value);
     }
 
 

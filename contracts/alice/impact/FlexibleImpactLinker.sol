@@ -9,9 +9,10 @@ contract FlexibleImpactLinker is ImpactLinker {
     using SafeMath for uint256;
 
     uint public unit;
-    /* Structures that store a match between validated outcomes and donations */
-    mapping (string => ImpactRegistry.Impact) impact;
-    mapping (string => uint) linkingCursors;
+
+    /* Structures that store a match between validated outcome claims and donations */
+    mapping (bytes32 => ImpactRegistry.Impact) impact;
+    mapping (bytes32 => uint) linkingCursors;
 
    constructor(ImpactRegistry _impactRegistry, uint _unit)
      ImpactLinker(_impactRegistry) public {
@@ -22,13 +23,13 @@ contract FlexibleImpactLinker is ImpactLinker {
         unit = _value;
     }
 
-    function linkImpact(string impactId) external onlyRegistry {
-      uint value = registry.getImpactTotalValue(impactId);
-      uint linked = registry.getImpactLinked(impactId);
+    function linkImpact(bytes32 _claimId) external onlyRegistry {
+      uint value = registry.getImpactTotalValue(_claimId);
+      uint linked = registry.getImpactLinked(_claimId);
       uint left = value.sub(linked);
 
       if (left > 0) {
-        uint i = linkingCursors[impactId];
+        uint i = linkingCursors[_claimId];
         address account = registry.getAccount(i);
         uint balance = registry.getBalance(account);
         if (balance >= 0) {
@@ -42,7 +43,7 @@ contract FlexibleImpactLinker is ImpactLinker {
               impactVal = unit;
           }
 
-          registry.registerImpact(impactId, i, impactVal);
+          registry.registerImpact(_claimId, i, impactVal);
 
           //Update cursor
           if (balance == impactVal) {
@@ -51,9 +52,9 @@ contract FlexibleImpactLinker is ImpactLinker {
 
           uint accountsCount = registry.getAccountsCount();
           if (accountsCount > 0) {
-            linkingCursors[impactId] = (i + 1) % accountsCount;
+            linkingCursors[_claimId] = (i + 1) % accountsCount;
           } else {
-            linkingCursors[impactId] = 0;
+            linkingCursors[_claimId] = 0;
           }
         }
       }
