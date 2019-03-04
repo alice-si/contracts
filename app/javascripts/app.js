@@ -57,33 +57,37 @@ function refreshBalance() {
 
 function showBalance(account, element) {
 	TokenContract.balanceOf(account).then(function(value) {
-    var balance_element = document.getElementById(element);
-    balance_element.innerHTML = value.valueOf();
+		lazyValueUpdate(element, value.valueOf());
     balances[account] = value;
   });
 }
 
 function showCoupons(account, element) {
 	CouponContract.balanceOf(account).then(function(value) {
-		var balance_element = document.getElementById(element);
-		balance_element.innerHTML = value.valueOf();
+		lazyValueUpdate(element, value.valueOf());
 	});
 }
 
 function showProjectTotal(element) {
 	ProjectContract.total().then(function(total) {
-		var balance_element = document.getElementById(element);
-			balance_element.innerHTML = total.valueOf()
+		lazyValueUpdate(element, total.valueOf());
 	});
 }
 
 function showLiability(element) {
 	ProjectContract.getLiability().then(function(liability) {
 		ProjectContract.getValidatedLiability().then(function(validated) {
-			var balance_element = document.getElementById(element);
-			balance_element.innerHTML = liability.valueOf() + " LHC ( " + validated.valueOf() + " validated )";
+			var value = liability.valueOf() + " LHC ( " + validated.valueOf() + " validated )";
+			lazyValueUpdate(element, value);
 		});
 	});
+}
+
+function lazyValueUpdate(element, value) {
+	var balance_element = document.getElementById(element);
+	if (balance_element.innerHTML !== value.valueOf()) {
+		balance_element.innerHTML = value.valueOf();
+	}
 }
 
 function showAllImpacts() {
@@ -106,6 +110,33 @@ function showImpact(name) {
       })(i);
     }
   });
+}
+
+function setTriggersForElementsWithChangeableAmounts() {
+	$('.amount-changeable').on('DOMSubtreeModified', function(event) {
+		blinkElement($(event.currentTarget));
+	});
+}
+
+function blinkElement(el) {
+	var timeout = 70;
+	// Wait till all events (like animation) on the element finish
+	el.promise().done(function() {
+		el.off('DOMSubtreeModified'); // disable trigger for current element to avoid double blinking
+		var startFontSize = el.css('font-size');
+		var increasedFontSize = parseInt(startFontSize) * 1.2 + 'px';
+    el.animate({
+			"font-size": increasedFontSize
+		}, timeout, function () {
+			el.animate({
+				"font-size": startFontSize
+			}, timeout, function () {
+				el.on('DOMSubtreeModified', function () {
+					blinkElement(el); // enable blinking handler for element again
+				})
+			});
+		});
+	});
 }
 
 window.deposit = function(account, value) {
@@ -142,8 +173,6 @@ window.redeem = async function(value) {
 		printTx("Coupon redemption", tx);
 	});
 };
-
-
 
 window.donateAll = async function(account) {
 	var total = await TokenContract.balanceOf(wallets[account].address);
@@ -277,23 +306,25 @@ window.onload = function() {
 	}
 	window.web3 = new Web3(new Web3.providers.HttpProvider(ganacheUrl));
 
+	setTriggersForElementsWithChangeableAmounts();
+
 	web3.eth.getAccounts(function(err, accs) {
-      if (err != null) {
-        alert("There was an error fetching your accounts.");
-        return;
-      }
+		if (err != null) {
+			alert("There was an error fetching your accounts.");
+			return;
+		}
 
-      if (accs.length == 0) {
-        alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-        return;
-      }
+		if (accs.length == 0) {
+			alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
+			return;
+		}
 
-      mapAccounts(accs);
+		mapAccounts(accs);
 
-      deploy();
+		deploy();
 
 
-    });
+	});
 
 
 };
