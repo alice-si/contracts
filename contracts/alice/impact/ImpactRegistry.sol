@@ -35,8 +35,8 @@ contract ImpactRegistry is Ownable {
     mapping(address => uint) values;
   }
 
-  /* Structures that store a match between validated outcomes and donations */
-  mapping (string => Impact) impacts;
+  /* Structures that store a match between validated outcome claims and donations */
+  mapping (bytes32 => Impact) impacts;
 
 
   constructor(address _masterContract) public {
@@ -59,20 +59,20 @@ contract ImpactRegistry is Ownable {
     linker = _linker;
   }
 
-  function registerOutcome(string _name, uint _value) external onlyMaster {
-    impacts[_name] = Impact(_value, 0, 0);
+  function registerOutcome(bytes32 _claimId, uint _value) external onlyMaster {
+    impacts[_claimId] = Impact(_value, 0, 0);
   }
 
-  function linkImpact(string _name) external onlyOwner {
-    linker.linkImpact(_name);
+  function linkImpact(bytes32 _claimId) external onlyOwner {
+    linker.linkImpact(_claimId);
   }
 
   function payBack(address _account) public onlyMaster {
     accountBalances[_account] = 0;
   }
 
-  function registerImpact(string _impactId, uint _accountIndex, uint _linkedValue) external onlyLinker  {
-    Impact storage impact = impacts[_impactId];
+  function registerImpact(bytes32 _claimId, uint _accountIndex, uint _linkedValue) external onlyLinker  {
+    Impact storage impact = impacts[_claimId];
     address account = this.getAccount(_accountIndex);
     if (impact.values[account] == 0) {
       impact.addresses[impact.count++] = account;
@@ -110,28 +110,28 @@ contract ImpactRegistry is Ownable {
     return accountBalances[_donorAddress];
   }
 
-  function getImpactCount(string outcome) public view returns(uint) {
-    return impacts[outcome].count;
+  function getImpactCount(bytes32 _claimId) public view returns(uint) {
+    return impacts[_claimId].count;
   }
 
-  function getImpactLinked(string outcome) public view returns(uint) {
-    return impacts[outcome].linked;
+  function getImpactLinked(bytes32 _claimId) public view returns(uint) {
+    return impacts[_claimId].linked;
   }
 
-  function getImpactTotalValue(string outcome) public view returns(uint) {
-    return impacts[outcome].value;
+  function getImpactTotalValue(bytes32 _claimId) public view returns(uint) {
+    return impacts[_claimId].value;
   }
 
-  function getImpactUnmatchedValue(string outcome) public view returns(uint) {
-    return impacts[outcome].value.sub(impacts[outcome].linked);
+  function getImpactUnmatchedValue(bytes32 _claimId) public view returns(uint) {
+    return impacts[_claimId].value.sub(impacts[_claimId].linked);
   }
 
-  function getImpactDonor(string outcome, uint index) public view returns(address) {
-    return impacts[outcome].addresses[index];
+  function getImpactDonor(bytes32 _claimId, uint index) public view returns(address) {
+    return impacts[_claimId].addresses[index];
   }
 
-  function getImpactValue(string outcome, address addr) public view returns(uint) {
-    return impacts[outcome].values[addr];
+  function getImpactValue(bytes32 _claimId, address addr) public view returns(uint) {
+    return impacts[_claimId].values[addr];
   }
 
 }

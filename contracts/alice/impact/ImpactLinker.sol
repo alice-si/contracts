@@ -17,6 +17,5 @@ contract ImpactLinker is Ownable {
         registry = _impactRegistry;
     }
 
-    function linkImpact(string impactId) external;
-
+    function linkImpact(bytes32 _claimId) external;
 }
