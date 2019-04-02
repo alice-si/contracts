@@ -55,7 +55,7 @@
     "style-loader": "^0.13.2",
     "truffle": "^4.1.13",
     "truffle-contract": "^3.0.1",
-    "web3": "^0.18.4",
+    "web3": "^1.0.0-beta.51",
     "webpack": "^2.7.0",
     "webpack-dev-server": "^2.9.3"
   }
