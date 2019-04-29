@@ -1,9 +1,9 @@
 # Alice Smart Contracts
 
-[![Build Status](https://travis-ci.org/alice-si/contracts.svg?branch=master)](https://travis-ci.org/alice-si/contracts)
-[![Join the chat at https://gitter.im/alice-si/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alice-si/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 This project is a collection of smart contracts used by Alice, a social impact platform built on Ethereum <https://alice.si>.
+
+### :warning: This repo is deprecated :warning:
+**Alice has moved all modules to a monorepo at [alice-si/monorepo](https://github.com/alice-si/monorepo). See you over there!**
 
 ### Overview
 
